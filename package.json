@@ -11,5 +11,8 @@
     "dependencies": {
         "typescript": "^4.5.4"
     },
-    "packageManager": "pnpm"
+    "packageManager": "pnpm",
+    "devDependencies": {
+        "@changesets/cli": "^2.19.0"
+    }
 }
