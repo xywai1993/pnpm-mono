@@ -1,6 +1,6 @@
 {
-    "name": "pnpm-mono",
-    "version": "1.0.0",
+    "name": "@yiper.fan/monorepo",
+    "version": "0.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {
