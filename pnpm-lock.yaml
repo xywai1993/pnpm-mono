@@ -1,0 +1,45 @@
+lockfileVersion: 5.3
+
+importers:
+
+  .:
+    specifiers:
+      typescript: ^4.5.4
+    dependencies:
+      typescript: 4.5.4
+
+  packages/demo:
+    specifiers:
+      '@yiper.fan/wx-mini-runtime': workspace:^0.0.1
+    dependencies:
+      '@yiper.fan/wx-mini-runtime': link:../wx-mini-runtime
+
+  packages/wx-mini-runtime:
+    specifiers:
+      '@types/wechat-miniprogram': ^3.4.0
+      '@vue/reactivity': ^3.2.26
+    dependencies:
+      '@types/wechat-miniprogram': 3.4.0
+      '@vue/reactivity': 3.2.26
+
+packages:
+
+  /@types/wechat-miniprogram/3.4.0:
+    resolution: {integrity: sha512-7d7KDwoV42/ANx/0C8C4ctBv1q9XnXYD4Fz0C+3ii0Tm+HRIwwDcinv8S88Ut/Y80czlI0shGpTgLFe0GbrXWQ==}
+    dev: false
+
+  /@vue/reactivity/3.2.26:
+    resolution: {integrity: sha512-h38bxCZLW6oFJVDlCcAiUKFnXI8xP8d+eO0pcDxx+7dQfSPje2AO6M9S9QO6MrxQB7fGP0DH0dYQ8ksf6hrXKQ==}
+    dependencies:
+      '@vue/shared': 3.2.26
+    dev: false
+
+  /@vue/shared/3.2.26:
+    resolution: {integrity: sha512-vPV6Cq+NIWbH5pZu+V+2QHE9y1qfuTq49uNWw4f7FDEeZaDU2H2cx5jcUZOAKW7qTrUS4k6qZPbMy1x4N96nbA==}
+    dev: false
+
+  /typescript/4.5.4:
+    resolution: {integrity: sha512-VgYs2A2QIRuGphtzFV7aQJduJ2gyfTljngLzjpfW9FoYZF6xuw1W0vW9ghCKLfcWrCFxK81CSGRAvS1pn4fIUg==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
