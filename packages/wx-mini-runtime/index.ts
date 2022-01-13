@@ -7,7 +7,7 @@ class Dep {
     constructor() {
         this.subscribers = new Set();
     }
-    depend(cb) {
+    depend(cb?: Function) {
         if (activeEffect) {
             this.subscribers.add(activeEffect);
         }
