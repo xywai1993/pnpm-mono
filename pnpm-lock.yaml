@@ -13,7 +13,7 @@ importers:
 
   packages/demo:
     specifiers:
-      '@yiper.fan/wx-mini-runtime': workspace:^0.0.1
+      '@yiper.fan/wx-mini-runtime': workspace:^0.0.2
     dependencies:
       '@yiper.fan/wx-mini-runtime': link:../wx-mini-runtime
 
