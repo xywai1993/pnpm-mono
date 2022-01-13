@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
+        "update:package": "changeset add & npm run publish ",
         "publish": "pnpm changeset version&&pnpm install&& pnpm publish -r --access public --no-git-checks"
     },
     "author": "",
