@@ -1,0 +1,15 @@
+{
+    "name": "@yiper.fan/wx-mini-runtime",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/wechat-miniprogram": "^3.4.0",
+        "@vue/reactivity": "^3.2.26"
+    }
+}
