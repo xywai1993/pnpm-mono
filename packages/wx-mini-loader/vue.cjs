@@ -121,7 +121,7 @@ function changeBindClass(bindClass) {
  *
  * @param eventString  类似 "goTo('a',1,2)" 或者 "goTo"
  */
-function changeEvents(eventString) {
+function changeEvents(eventString, otherData) {
     const ast = recastParse(`const test = ${eventString}`).program.body[0].declarations[0].init;
 
     let eventName = '';
@@ -141,6 +141,14 @@ function changeEvents(eventString) {
             UnaryExpression: (item) => {
                 // console.log(print(item).code);
                 eventParams.push(print(item).code);
+            },
+            MemberExpression: (item) => {
+                // if (otherData.isFor && otherData.alias == item.object.name) {
+                //     eventParams.push(`{{${item.property.name}}}`);
+                // } else {
+                //     eventParams.push(`{{${print(item).code}}}`);
+                // }
+                eventParams.push(`{{${print(item).code}}}`);
             },
         };
         ast.arguments.forEach((item) => {
@@ -225,6 +233,24 @@ function t(children) {
             if (item.attrsMap.is) {
                 o.attr['is'] = item.attrsMap.is;
             }
+
+            // 填充默认值
+            if (o.tag === 'image') {
+                if (!o.attr['mode']) {
+                    o.attr['mode'] = 'aspectFill';
+                }
+            }
+        }
+
+        if (item.props) {
+            item.props.forEach((props) => {
+                if (props.dynamic === false) {
+                    o.attr[props.name] = `{{${props.value}}}`;
+                } else {
+                    // todo: 这里将来可能会有bug 强制去掉了双引号
+                    o.attr[props.name] = `${props.value}`;
+                }
+            });
         }
 
         // 指令
@@ -244,7 +270,9 @@ function t(children) {
                 const wxEventName = key[0] == 'click' ? `${bindOrCatch}:tap` : `${bindOrCatch}:${key[0]}`;
 
                 // 转换响应函数
-                const eventResponseData = changeEvents(key[1].value);
+
+                const otherData = { isFor: !!item.for, alias: item.alias };
+                const eventResponseData = changeEvents(key[1].value, otherData);
 
                 o.attr[wxEventName] = eventResponseData.eventName;
 
@@ -300,14 +328,10 @@ function t(children) {
 }
 
 const template = `
-                <li >
-                <template name="item">
-  <text>{{text}}</text>
-</template>
-                <import src="item.wxml"/>
-                <template is="item" data="{{text: 'forbar'}}"/>
-
-                </li>
+<div>
+<div @click="demoData.c = 333">点我点我</div>
+<div>{{ demoData.c }}</div>   
+</div>
 `;
 const r = template2WxTemplate(template);
 console.log(r);
