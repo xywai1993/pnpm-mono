@@ -1,12 +1,12 @@
 {
     "name": "@yiper.fan/wx-mini-loader",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "type": "commonjs",
     "scripts": {
         "test": "node vue.cjs",
-        "get-vue-var": "node get-vue-var.cjs"
+        "get-vue-var": "node template-dynamic-var.cjs"
     },
     "author": "",
     "license": "ISC",

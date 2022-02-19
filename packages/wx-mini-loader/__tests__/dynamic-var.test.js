@@ -9,12 +9,15 @@ test('template2Set: <div>{{hello}}</div> is ok', () => {
 });
 
 test('template2Set: v-for index is ok', () => {
-    const data = template2Set(`<div v-for="(li,index) in list"></div>`);
+    const data = template2Set(`<div v-for="li in list"></div>`);
     const data2 = template2Set(`<div v-for="(li,index) in list">{{index}}</div>`);
-    const data3 = template2Set(`<div v-for="(li,index) in list"><i v-if="index"></i></div>`);
-    expect(data.has('index')).toBe(false);
-    expect(data2.has('index')).toBe(false);
-    expect(data3.has('index')).toBe(false);
+    const data3 = template2Set(`<div v-for="(li,index) in list"><i v-if="index">{{li.id}}</i></div>`);
+
+    [data, data2, data3].forEach((item) => {
+        expect(item.has('list')).toBe(true);
+        expect(item.has('index')).toBe(false);
+        expect(item.has('li')).toBe(false);
+    });
 });
 
 test('createSetupString: <div>{{hello}}</div> is ok', () => {

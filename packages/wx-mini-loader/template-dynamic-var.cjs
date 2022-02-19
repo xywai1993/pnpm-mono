@@ -3,12 +3,25 @@
 const compiler = require('vue-template-compiler');
 const { visit, parse: recastParse, print, types } = require('recast');
 
+// 去除交集
+function symmetricDifference(setA, setB) {
+    let _difference = new Set(setA);
+    for (let elem of setB) {
+        if (_difference.has(elem)) {
+            _difference.delete(elem);
+        } else {
+            _difference.add(elem);
+        }
+    }
+    return _difference;
+}
+
 /**
  * 解析ast 或者 string
  * @param {string|object} str
  * @returns {string[]}
  */
-function parseAstGetVar(str) {
+function parseAstGetVar(str, idArr) {
     const arr = [];
     let ast = str;
     const parseAst = (ast) => {
@@ -44,16 +57,11 @@ function parseAstGetVar(str) {
         ast = recastParse(`const test = ${str}`).program.body[0].declarations[0].init;
     }
     parseAst(ast);
-
+    arr.forEach((item) => idArr.add(item));
     return arr;
 }
 
-// 排除循环参数
-function filterIterator1(arr, Iterator1Name) {
-    return arr.filter((ele) => ele !== Iterator1Name);
-}
-
-function t(children, isFor = { isFor: false, Iterator1Name: undefined }, idArr = []) {
+function t(children, filterArr, idArr) {
     return children.map((item) => {
         const o = { node: '', type: 1, tag: '', text: '', attr: {}, child: [] };
         o.tag = item.tag;
@@ -66,29 +74,28 @@ function t(children, isFor = { isFor: false, Iterator1Name: undefined }, idArr =
                     if (token.hasOwnProperty('@binding')) {
                         const ast = recastParse(`const test = ${token['@binding']}`).program.body[0].declarations[0].init;
 
-                        filterIterator1(parseAstGetVar(ast), isFor.Iterator1Name).forEach((item) => idArr.add(item));
+                        parseAstGetVar(ast, idArr);
                     }
                 }
             });
         }
 
         if (item.if) {
-            filterIterator1(parseAstGetVar(item.if), isFor.Iterator1Name).forEach((item) => idArr.add(item));
+            parseAstGetVar(item.if, idArr);
         }
 
         if (item.for) {
             // wx:for-item="i"
-            const ast = recastParse(`const test = ${item.for}`).program.body[0].declarations[0].init;
-            parseAstGetVar(ast)
-                .filter((ele) => ele !== item.iterator1)
-                .forEach((ele) => idArr.add(ele));
+            parseAstGetVar(item.for, idArr);
+            filterArr.add(item.alias);
+            item.iterator1 && filterArr.add(item.iterator1);
         }
 
         if (item.attrs) {
             item.attrs.forEach((attr, i) => {
                 // todo: 这里很奇怪，经过vue转换后的数据 ，dynamic的值动态的为 false ，非动态为 undefined
                 if (attr.dynamic === false) {
-                    parseAstGetVar(attr.value).forEach((item) => idArr.add(item));
+                    parseAstGetVar(attr.value, idArr);
                 }
             });
         }
@@ -96,7 +103,7 @@ function t(children, isFor = { isFor: false, Iterator1Name: undefined }, idArr =
         if (item.props) {
             item.props.forEach((props) => {
                 if (props.dynamic === false) {
-                    parseAstGetVar(props.value).forEach((item) => idArr.add(item));
+                    parseAstGetVar(props.value, idArr);
                 }
             });
         }
@@ -114,26 +121,23 @@ function t(children, isFor = { isFor: false, Iterator1Name: undefined }, idArr =
         if (item.events) {
             Object.entries(item.events).forEach((key) => {
                 if (key[1].dynamic === false) {
-                    parseAstGetVar(key[1].value).forEach((item) => idArr.add(item));
+                    parseAstGetVar(key[1].value, idArr);
                 }
             });
         }
 
         // 动态class
         if (item.classBinding) {
-            // '{a:some}' 转换为 [a:some]
-            // parseAstGetVar(item.classBinding).forEach((item) => idArr.add(item));
-
-            filterIterator1(parseAstGetVar(item.classBinding), isFor.Iterator1Name).forEach((item) => idArr.add(item));
+            parseAstGetVar(item.classBinding, idArr);
         }
 
         // 动态style
         if (item.styleBinding) {
-            filterIterator1(parseAstGetVar(item.styleBinding), isFor.Iterator1Name).forEach((item) => idArr.add(item));
+            parseAstGetVar(item.styleBinding, idArr);
         }
         // 子节点
         if (item.children) {
-            o.child = t(item.children, { isFor: !!item.for, Iterator1Name: item.iterator1 }, idArr);
+            o.child = t(item.children, filterArr, idArr);
         }
         return o;
     });
@@ -141,19 +145,29 @@ function t(children, isFor = { isFor: false, Iterator1Name: undefined }, idArr =
 
 function getVar(children) {
     const idArr = new Set();
-    t(children, { isFor: false, Iterator1Name: undefined }, idArr);
+    const filterArr = new Set();
+    t(children, filterArr, idArr);
+
+    for (let elem of filterArr) {
+        // _difference.delete(elem);
+        if (idArr.has(elem)) {
+            idArr.delete(elem);
+        }
+    }
 
     return idArr;
 }
 
 const template = `
-<mp-navigation-bar v-for="(li,index) in list"  > 
-<div :class="['item'+index]"></div>
-<div v-for="(li,index2) in list2">{{index2}}</div>
-</mp-navigation-bar>
+<div v-for="(li,index) in petList" :key="li.id" class="pet-item" >
+<div class="pet-avatar">
+    <img :src="li.avatar" class="g-img" alt />
+</div>
+<p class="mt-5 fs-12 fsw-6em">{{ li.nickname }}</p>
+</div>
 `;
-// const r = template2Set(template);
-// console.log(r);
+const r = template2Set(template);
+console.log(r);
 function template2Set(template) {
     const result = compiler.compile(template, {});
     return getVar([result.ast]);
@@ -181,7 +195,8 @@ function createSetupString(oldCodeString, varArr) {
             });
             const newBody = b.blockStatement([...other, b.returnStatement(b.objectExpression(val))]);
             path.replace(newBody);
-            this.traverse(path);
+            // this.traverse(path);
+            return false;
         },
     });
 
