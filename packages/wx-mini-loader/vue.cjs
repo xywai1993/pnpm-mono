@@ -68,17 +68,28 @@ function changeElementName(tagName) {
  * @returns {string}
  */
 function changeBindStyle(bindStyle) {
-    const ast = recastParse(`const test = ${bindStyle}`).program.body[0].declarations[0].init.properties;
-    let styleStr = '';
+    const ast = recastParse(`const test = ${bindStyle}`).program.body[0].declarations[0].init;
 
-    ast.forEach((style) => {
-        const value = style.value;
-        const key = style.key.type === 'Identifier' ? style.key.name : style.key.value;
-        const code = print(value).code;
-        styleStr += `;${key}:{{${code}}}`;
-    });
+    // 类似这样的 "{'width':some+'px',height:some2}"
+    if (ast.type === 'ObjectExpression') {
+        let styleStr = '';
+        ast.properties.forEach((style) => {
+            const value = style.value;
+            const key = style.key.type === 'Identifier' ? style.key.name : style.key.value;
+            const code = print(value).code;
+            styleStr += `;${key}:{{${code}}}`;
+        });
 
-    return styleStr;
+        return styleStr;
+    }
+
+    if (ast.type === 'Identifier') {
+        return `{{${ast.name}}}`;
+    }
+
+    if (ast.type === 'MemberExpression') {
+        return `{{${print(ast).code}}}`;
+    }
 }
 
 /**
@@ -89,14 +100,15 @@ function changeBindClass(bindClass) {
     const ast = recastParse(`const test = ${bindClass}`).program.body[0].declarations[0].init;
 
     const classArr = [];
-    // 格式1 [a,b.c,c]
+    // 格式1 [a,b.c,c+'f']
     if (ast.type === 'ArrayExpression') {
         ast.elements.forEach((item) => {
             if (item.type == 'Identifier') {
                 classArr.push(`{{${item.name}}}`);
             }
 
-            if (item.type == 'MemberExpression') {
+            const codeType = ['ConditionalExpression', 'MemberExpression', 'BinaryExpression'];
+            if (codeType.indexOf(item.type) !== -1) {
                 const code = print(item);
                 classArr.push(`{{${code.code}}}`);
             }
@@ -329,8 +341,8 @@ function t(children) {
 
 const template = `
 <div>
-<div @click="demoData.c = 333">点我点我</div>
-<div>{{ demoData.c }}</div>   
+<div @confirm="bindConfirm(id)">点我点我</div>
+ 
 </div>
 `;
 const r = template2WxTemplate(template);

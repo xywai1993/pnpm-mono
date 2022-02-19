@@ -4,13 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "jest-test": "npx jest packages ",
         "update:package": "changeset add  ",
         "publish": "pnpm changeset version&&pnpm install&& pnpm publish -r --access public --no-git-checks"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "jest": "^27.5.1",
         "typescript": "^4.5.4"
     },
     "packageManager": "pnpm",
