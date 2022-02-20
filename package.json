@@ -7,7 +7,8 @@
         "jest-test": "npx jest packages/wx-mini-loader",
         "jest-runtime-test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest packages/wx-mini-runtime",
         "update:package": "pnpm run jest-test && changeset add ",
-        "publish": "pnpm changeset version&&pnpm install&& pnpm publish -r --access public --no-git-checks"
+        "local-publish": "pnpm changeset version&&pnpm install&& pnpm publish -r --access public --no-git-checks",
+        "publish": "pnpm ci:publish"
     },
     "author": "",
     "license": "ISC",
