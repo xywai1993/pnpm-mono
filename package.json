@@ -4,13 +4,15 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "jest-test": "npx jest packages ",
-        "update:package": "changeset add  ",
+        "jest-test": "npx jest packages/wx-mini-loader",
+        "jest-runtime-test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest packages/wx-mini-runtime",
+        "update:package": "pnpm run jest-test && changeset add ",
         "publish": "pnpm changeset version&&pnpm install&& pnpm publish -r --access public --no-git-checks"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "cross-env": "^7.0.3",
         "jest": "^27.5.1",
         "typescript": "^4.5.4"
     },

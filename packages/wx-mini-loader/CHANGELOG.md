@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.1.1
+
+### Patch Changes
+
+- 示例项目
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-runtime
 
+## 0.0.5
+
+### Patch Changes
+
+- 示例项目
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @yiper.fan/demo
 
+## 1.0.4
+
+### Patch Changes
+
+- 示例项目
+- Updated dependencies
+  - @yiper.fan/wx-mini-loader@0.1.1
+  - @yiper.fan/wx-mini-runtime@0.0.5
+
 ## 1.0.3
 
 ### Patch Changes
