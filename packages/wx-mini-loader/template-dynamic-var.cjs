@@ -50,11 +50,9 @@ function parseAstGetVar(str, idArr, filterArr) {
     return arr;
 }
 
-function t(children, idArr, filterArr) {
-    return children.map((item) => {
-        const o = { node: '', type: 1, tag: '', text: '', attr: {}, child: [] };
-        o.tag = item.tag;
-        o.type = item.type;
+function t(children, idArr, fA) {
+    children.forEach((item) => {
+        const filterArr = new Set([...fA]);
 
         if (item.for) {
             // wx:for-item="i"
@@ -101,7 +99,7 @@ function t(children, idArr, filterArr) {
         if (item.directives) {
             item.directives.forEach((directives) => {
                 if (directives.rawName == 'v-show') {
-                    o.attr['hidden'] = `{{${directives.value}}}`;
+                    // o.attr['hidden'] = `{{${directives.value}}}`;
                 }
             });
         }
@@ -126,11 +124,8 @@ function t(children, idArr, filterArr) {
         }
         // 子节点
         if (item.children) {
-            o.child = t(item.children, idArr, filterArr);
-        } else {
-            filterArr.clear();
+            t(item.children, idArr, filterArr);
         }
-        return o;
     });
 }
 
@@ -143,26 +138,10 @@ function getVar(children) {
 }
 
 const template = `
-<div>
-
-<div>
-   
-    <div class="g-flex pet-list">
-        <div v-for="li in petList" :key="li.id" class="pet-item" @click="goPetHome(li.id)">
-            <div class="pet-avatar">
-                <img :src="li.avatar" class="g-img" alt />
-            </div>
-           <div>
-           <p>{{ li.nickname }}</p>
-           </div>
-        </div>
-       
-    </div>
-</div>
-
-
-
-
+<div>      
+<div v-for="(li,index) in list"></div>
+<p>{{index}}</p>
+{{li}}
 </div>
 `;
 const r = template2Set(template);
