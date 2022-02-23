@@ -108,28 +108,7 @@ onPageLoad(() => {
 })
 
 const onShow = () => {
-    // GetPetList().then(data => hasPet.value = !!data.length)
 
-    hasPet.value = getHasPet();
-
-    GetPetList().then(data => {
-        petList.value = data;
-    })
-
-
-    if (!wx.getStorageSync(constant.hasUserInfo)) {
-        GetUserInfo().then(data => {
-            hasUserInfo.value = !!data.nickname
-            userInfo.value = data;
-            wx.setStorageSync(constant.hasUserInfo, true);
-        })
-    }
-
-
-
-    GetUserCenter().then(data => {
-        userCenterData.value = data;
-    })
 }
 
 const goPage = (page) => {
@@ -159,64 +138,132 @@ const goPetHome = (id) => {
 </script>
 
 <style lang="less">
+.nickname {
+    font-size: 15px;
+    font-family: PingFang SC;
+    font-weight: 600;
+    color: #191919;
+    opacity: 1;
+}
+.pet-column {
+    border-top: 10px solid #f6f6f6;
+    padding: 15px 0 0 20px;
+    font-weight: bold;
+}
+
+.pet-item {
+    margin: 0 5px;
+    text-align: center;
+}
+.pet-list {
+    padding: 20px;
+}
+.pet-avatar {
+    margin: 0 auto;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    > .g-img {
+        object-fit: fill;
+        height: 50px;
+    }
+}
+.pet-create-btn {
+    line-height: 45px;
+    height: 48px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #ededed;
+}
+
+.menu-title {
+    padding-left: 35px;
+    font-size: 15px;
+    font-family: PingFang SC;
+    font-weight: 500;
+    color: #191919;
+    opacity: 1;
+}
+.menu-item {
+    height: 60px;
+
+    border-bottom: 1px solid #f6f6f6;
+}
+
 .body {
-    margin-top: 100px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
-    background-color: #f2f2f2;
-    min-height: 100vh;
+    border-top: 10px solid #f6f6f6;
+    padding: 0 15px;
+}
+.adviser-info {
+    margin: 20px auto 0;
+    width: 331px;
+    height: 54px;
+    line-height: 54px;
+    background: #ffffff;
+    border: 2px solid #191919;
+    box-shadow: 0px 9px 0px rgba(0, 0, 0, 0.06);
+    opacity: 1;
+    border-radius: 20px;
+    font-size: 15px;
+    font-family: PingFang SC;
+    font-weight: 600;
+    color: #191919;
+    opacity: 1;
+    text-align: center;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    box-shadow: 0px 3px 22px rgba(0, 0, 0, 0.16);
+    opacity: 1;
+    border-radius: 40px;
     overflow: hidden;
 }
+.default-avatar {
+    width: 65px;
+    height: 65px;
+    box-shadow: 0px 3px 22px rgba(0, 0, 0, 0.16);
+    opacity: 1;
+    border-radius: 40px;
+    border: 5rpx solid #191919;
+    overflow: hidden;
+
+    > .g-img {
+        height: 60px;
+    }
+}
+
 .header {
     // margin-top: calc(-44px - env(safe-area-inset-top));
     width: 100%;
-    height: 252px;
-    background: url("./static/souyebg@2x.png") left top no-repeat;
-    background-size: contain;
+    padding: 20px;
     opacity: 1;
     overflow: hidden;
-}
-.search {
-    margin-top: 10px;
-    padding-left: 35px;
-    width: 312px;
-    height: 40px;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.13);
-    opacity: 1;
-    border-radius: 27px;
-    background: #fff url("./static/search-icon@2x.png") 10px center/18px auto
-        no-repeat;
-}
-.top-search {
-    width: 210px;
-    padding-left: 30px;
-    height: 32px;
-    border: 1px solid rgba(247, 243, 245, 1);
-    border-radius: 17px;
-    color: #333;
-    // background: #fff url('./static/search-icon@2x.png') 10px center/18px auto no-repeat;
-}
-
-.grid {
-    margin: -65rpx auto 0;
-    width: 96%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr;
     box-sizing: border-box;
-    gap: 10rpx;
 }
-.list-wrap {
-    // margin-top: -40px;
-    // padding: 0 10px;
-    // column-count: 2;
-    > .item {
-        // break-inside: avoid;
-        // padding: 0 10px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-        box-shadow: 0px 3px 30px rgba(0, 0, 0, 0.06);
-        opacity: 1;
-        border-radius: 6rpx;
-    }
+.num {
+    margin-right: 20px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    background: #ff3333;
+    border-radius: 50%;
+    opacity: 1;
+    text-align: center;
+    font-size: 10px;
+    font-family: PingFang SC;
+    font-weight: 500;
+    color: #ffffff;
+    opacity: 1;
+}
+.city {
+    font-size: 12px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    color: #999999;
+    opacity: 1;
 }
 </style>

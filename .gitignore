@@ -1,5 +1,3 @@
 node_modules
-/packages/wx-mini-runtime/*.js
-/packages/wx-mini-runtime/*.d.ts
 .npmrc
 /packages/demo/dist/
