@@ -39,7 +39,18 @@ test('template2Set: 非循环组件含有index等特殊变量 is ok', () => {
     expect(data.has('index')).toBe(true);
     expect(data.has('li')).toBe(true);
     expect(data2.has('index')).toBe(true);
-    expect(data.has('li')).toBe(true);
+    expect(data2.has('li')).toBe(true);
+});
+
+test('template2Set: 循环组件嵌套组件 is ok', () => {
+    const data = template2Set(`
+    <div v-for="li in petList" :key="li.id" class="pet-item" @click="goPetHome(li.id)">
+    <div class="pet-avatar">
+        <img :src="li.avatar" class="g-img" alt />
+    </div> 
+</div>`);
+
+    expect(data.has('li')).toBe(false);
 });
 
 test('createSetupString: <div>{{hello}}</div> is ok', () => {

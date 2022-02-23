@@ -56,6 +56,13 @@ function t(children, idArr, filterArr) {
         o.tag = item.tag;
         o.type = item.type;
 
+        if (item.for) {
+            // wx:for-item="i"
+            filterArr.add(item.alias);
+            item.iterator1 && filterArr.add(item.iterator1);
+            parseAstGetVar(item.for, idArr, filterArr);
+        }
+
         // 文本 可能包含 {{num}} 这样的
         if (item.type === 2) {
             item.tokens.forEach((token) => {
@@ -71,13 +78,6 @@ function t(children, idArr, filterArr) {
 
         if (item.if) {
             parseAstGetVar(item.if, idArr, filterArr);
-        }
-
-        if (item.for) {
-            // wx:for-item="i"
-            filterArr.add(item.alias);
-            item.iterator1 && filterArr.add(item.iterator1);
-            parseAstGetVar(item.for, idArr, filterArr);
         }
 
         if (item.attrs) {
@@ -126,7 +126,9 @@ function t(children, idArr, filterArr) {
         }
         // 子节点
         if (item.children) {
-            o.child = t(item.children, idArr, item.for ? filterArr : new Set());
+            o.child = t(item.children, idArr, filterArr);
+        } else {
+            filterArr.clear();
         }
         return o;
     });
@@ -137,25 +139,17 @@ function getVar(children) {
     const filterArr = new Set();
     t(children, idArr, filterArr);
 
-    for (let elem of filterArr) {
-        // _difference.delete(elem);
-        if (idArr.has(elem)) {
-            idArr.delete(elem);
-        }
-    }
-
     return idArr;
 }
 
 const template = `
-<div v-for="(li,index) in petList" :key="li.id" class="pet-item" >
-<div class="pet-avatar">
-    <img :src="li.avatar" class="g-img" alt />
-</div>
-<p class="mt-5 fs-12 fsw-6em">{{ li.nickname }}</p>
+<div>      
+<div v-for="(li,index) in list"></div>
+<div>{{index}}</div>
 </div>
 `;
 const r = template2Set(template);
+console.log(r);
 function template2Set(template) {
     const result = compiler.compile(template, {});
     return getVar([result.ast]);
