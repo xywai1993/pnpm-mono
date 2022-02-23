@@ -17,8 +17,8 @@ importers:
 
   packages/demo:
     specifiers:
-      '@yiper.fan/wx-mini-loader': workspace:^0.1.1
-      '@yiper.fan/wx-mini-runtime': workspace:^0.0.5
+      '@yiper.fan/wx-mini-loader': workspace:^
+      '@yiper.fan/wx-mini-runtime': workspace:^
       copy-webpack-plugin: ^10.2.4
       cross-env: ^7.0.3
       css-loader: ^6.5.0

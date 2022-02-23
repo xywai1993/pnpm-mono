@@ -1,5 +1,17 @@
 # @yiper.fan/demo
 
+## 1.1.0
+
+### Minor Changes
+
+- 新增生命周期函数方法
+
+### Patch Changes
+
+- Updated dependencies
+  - @yiper.fan/wx-mini-loader@0.2.0
+  - @yiper.fan/wx-mini-runtime@0.1.0
+
 ## 1.0.4
 
 ### Patch Changes

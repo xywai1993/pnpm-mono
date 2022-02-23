@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.2.0
+
+### Minor Changes
+
+- 新增生命周期函数方法
+
 ## 0.1.1
 
 ### Patch Changes
