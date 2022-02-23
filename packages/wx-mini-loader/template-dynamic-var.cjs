@@ -143,9 +143,26 @@ function getVar(children) {
 }
 
 const template = `
-<div>      
-<div v-for="(li,index) in list"></div>
-<div>{{index}}</div>
+<div>
+
+<div>
+   
+    <div class="g-flex pet-list">
+        <div v-for="li in petList" :key="li.id" class="pet-item" @click="goPetHome(li.id)">
+            <div class="pet-avatar">
+                <img :src="li.avatar" class="g-img" alt />
+            </div>
+           <div>
+           <p>{{ li.nickname }}</p>
+           </div>
+        </div>
+       
+    </div>
+</div>
+
+
+
+
 </div>
 `;
 const r = template2Set(template);

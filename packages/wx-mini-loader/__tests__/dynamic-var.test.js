@@ -44,10 +44,11 @@ test('template2Set: 非循环组件含有index等特殊变量 is ok', () => {
 
 test('template2Set: 循环组件嵌套组件 is ok', () => {
     const data = template2Set(`
-    <div v-for="li in petList" :key="li.id" class="pet-item" @click="goPetHome(li.id)">
+    <div v-for="li in petList" :key="li.id"  >
     <div class="pet-avatar">
         <img :src="li.avatar" class="g-img" alt />
     </div> 
+    <p class="mt-5 fs-12 fsw-6em">{{ li.nickname }}</p>
 </div>`);
 
     expect(data.has('li')).toBe(false);
