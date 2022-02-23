@@ -4,7 +4,7 @@ export declare function pp(
         isRef: boolean;
     }
 ): any;
-export declare const ppRef: (target: T) => T;
+export declare const ppRef: <T>(target: T) => T;
 export declare function pComputed(cb: any): {
     value: any;
 };
