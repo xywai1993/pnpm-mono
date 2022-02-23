@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.2.1
+
+### Patch Changes
+
+- 修复 for 循环临时变量被添加为正式变量的问题
+
 ## 0.2.0
 
 ### Minor Changes
