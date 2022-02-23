@@ -117,26 +117,60 @@ export function pp(obj, params = { isRef: false }) {
     });
 }
 
-const onLoadFnList = [];
+/**
+ * 小程序页面生命周期
+ */
+
+const onPageLifetimesFnList = {
+    onLoad: [],
+};
+export const onPageLifetimes = (name, cb) => {
+    if (typeof cb === 'function') {
+        if (name === 'onLoad') {
+            onLoadFnList.push(cb);
+            return;
+        }
+        if (onPageLifetimesFnList.hasOwnProperty(name)) {
+            onPageLifetimesFnList[name].push(cb);
+        } else {
+            onPageLifetimesFnList[name] = [cb];
+        }
+    }
+};
+
+/**
+ * onPageLoad 快捷方式
+ *
+ */
 export const onPageLoad = (cb) => {
     if (typeof cb === 'function') {
-        onLoadFnList.push(cb);
+        onPageLifetimesFnList['onLoad'].push(cb);
     }
 };
 
 export const setup = (callback) => {
-    onLoadFnList.length = 0;
-
     const data = callback();
     const wxPage = {
-        onLoad: (options) => {
-            onLoadFnList.forEach((item) => {
-                item(options);
-            });
-        },
         // tip  @click="show=true" 这种写法将被 编译为 @click="__AssignmentExpression" ,因此预先内置
         __AssignmentExpression: () => {},
     };
+
+    // 确保onLoad 必定有一个
+    if (!onPageLifetimesFnList.onLoad.length) {
+        onPageLifetimesFnList.onLoad.push((options) => {});
+    }
+    for (const [key, value] of Object.entries(onPageLifetimesFnList)) {
+        if (key === 'onShareAppMessage') {
+            wxPage[key] = value[0];
+        } else {
+            wxPage[key] = (options) => {
+                value.forEach((item) => {
+                    item(options);
+                });
+            };
+        }
+    }
+
     const wxData = {};
 
     Object.entries(data).forEach((val) => {

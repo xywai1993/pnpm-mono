@@ -54,7 +54,6 @@ module.exports.pitch = function (a) {
         ${styleImports}
         ${scriptContent}
         `;
-        console.log(scriptContent);
 
         return code;
     }

@@ -55,6 +55,7 @@
                 </li>
             </ul>
         </div>
+        <div>{{ li }}</div>
 
         <nav-nav hover="d"></nav-nav>
     </div>
@@ -68,8 +69,9 @@
 }
 </config>
 <script  setup>
-import { setup, pp, ppRef, onPageLoad } from "@yiper.fan/wx-mini-runtime";
+import { pp, ppRef, onPageLoad, onPageLifetimes } from "@yiper.fan/wx-mini-runtime";
 
+const li = ppRef(111);
 const goTo = () => { };
 const { hasPet, getHasPet } = {
     hasPet: true,
@@ -103,13 +105,25 @@ const getUserInfo = () => {
 
 }
 
-onPageLoad(() => {
-
+onPageLoad((options) => {
+    console.log(options, '回调函数');
 })
 
-const onShow = () => {
+onPageLoad(options => {
+    console.log('回调函数2222');
+})
 
-}
+onPageLifetimes('onShow', () => {
+    console.log('onPageShow');
+})
+
+onPageLifetimes('onShareAppMessage', (options) => {
+    console.log(options, 'onPageShow22222');
+    return {
+        title: 'Nihao',
+        path: '/pages/index/main'
+    }
+})
 
 const goPage = (page) => {
 

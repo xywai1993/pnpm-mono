@@ -20,6 +20,28 @@ test('template2Set: v-for index is ok', () => {
     });
 });
 
+test('template2Set: 非循环组件含有index等特殊变量 is ok', () => {
+    const data = template2Set(`
+    <div>
+        {{li}}
+        <div>{{index}}</div>
+        <div v-for="(li,index) in list"></div>
+    </div>
+    `);
+    const data2 = template2Set(`
+    <div>      
+        <div v-for="(li,index) in list"></div>
+        <div>{{index}}</div>
+        {{li}}
+    </div>
+    `);
+
+    expect(data.has('index')).toBe(true);
+    expect(data.has('li')).toBe(true);
+    expect(data2.has('index')).toBe(true);
+    expect(data.has('li')).toBe(true);
+});
+
 test('createSetupString: <div>{{hello}}</div> is ok', () => {
     const oldCode = `const a = pp({b:1})`;
     const data = createSetupString(oldCode, ['a']);

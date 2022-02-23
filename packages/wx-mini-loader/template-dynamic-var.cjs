@@ -3,31 +3,20 @@
 const compiler = require('vue-template-compiler');
 const { visit, parse: recastParse, print, types } = require('recast');
 
-// 去除交集
-function symmetricDifference(setA, setB) {
-    let _difference = new Set(setA);
-    for (let elem of setB) {
-        if (_difference.has(elem)) {
-            _difference.delete(elem);
-        } else {
-            _difference.add(elem);
-        }
-    }
-    return _difference;
-}
-
 /**
  * 解析ast 或者 string
  * @param {string|object} str
  * @returns {string[]}
  */
-function parseAstGetVar(str, idArr) {
+function parseAstGetVar(str, idArr, filterArr) {
     const arr = [];
     let ast = str;
     const parseAst = (ast) => {
         const fn = {
             Identifier: () => {
-                arr.push(ast.name);
+                if (!filterArr.has(ast.name)) {
+                    arr.push(ast.name);
+                }
             },
             MemberExpression: () => {
                 parseAst(ast.object);
@@ -61,7 +50,7 @@ function parseAstGetVar(str, idArr) {
     return arr;
 }
 
-function t(children, filterArr, idArr) {
+function t(children, idArr, filterArr) {
     return children.map((item) => {
         const o = { node: '', type: 1, tag: '', text: '', attr: {}, child: [] };
         o.tag = item.tag;
@@ -74,28 +63,28 @@ function t(children, filterArr, idArr) {
                     if (token.hasOwnProperty('@binding')) {
                         const ast = recastParse(`const test = ${token['@binding']}`).program.body[0].declarations[0].init;
 
-                        parseAstGetVar(ast, idArr);
+                        parseAstGetVar(ast, idArr, filterArr);
                     }
                 }
             });
         }
 
         if (item.if) {
-            parseAstGetVar(item.if, idArr);
+            parseAstGetVar(item.if, idArr, filterArr);
         }
 
         if (item.for) {
             // wx:for-item="i"
-            parseAstGetVar(item.for, idArr);
             filterArr.add(item.alias);
             item.iterator1 && filterArr.add(item.iterator1);
+            parseAstGetVar(item.for, idArr, filterArr);
         }
 
         if (item.attrs) {
             item.attrs.forEach((attr, i) => {
                 // todo: 这里很奇怪，经过vue转换后的数据 ，dynamic的值动态的为 false ，非动态为 undefined
                 if (attr.dynamic === false) {
-                    parseAstGetVar(attr.value, idArr);
+                    parseAstGetVar(attr.value, idArr, filterArr);
                 }
             });
         }
@@ -103,7 +92,7 @@ function t(children, filterArr, idArr) {
         if (item.props) {
             item.props.forEach((props) => {
                 if (props.dynamic === false) {
-                    parseAstGetVar(props.value, idArr);
+                    parseAstGetVar(props.value, idArr, filterArr);
                 }
             });
         }
@@ -121,23 +110,23 @@ function t(children, filterArr, idArr) {
         if (item.events) {
             Object.entries(item.events).forEach((key) => {
                 if (key[1].dynamic === false) {
-                    parseAstGetVar(key[1].value, idArr);
+                    parseAstGetVar(key[1].value, idArr, filterArr);
                 }
             });
         }
 
         // 动态class
         if (item.classBinding) {
-            parseAstGetVar(item.classBinding, idArr);
+            parseAstGetVar(item.classBinding, idArr, filterArr);
         }
 
         // 动态style
         if (item.styleBinding) {
-            parseAstGetVar(item.styleBinding, idArr);
+            parseAstGetVar(item.styleBinding, idArr, filterArr);
         }
         // 子节点
         if (item.children) {
-            o.child = t(item.children, filterArr, idArr);
+            o.child = t(item.children, idArr, item.for ? filterArr : new Set());
         }
         return o;
     });
@@ -146,7 +135,7 @@ function t(children, filterArr, idArr) {
 function getVar(children) {
     const idArr = new Set();
     const filterArr = new Set();
-    t(children, filterArr, idArr);
+    t(children, idArr, filterArr);
 
     for (let elem of filterArr) {
         // _difference.delete(elem);
@@ -167,7 +156,6 @@ const template = `
 </div>
 `;
 const r = template2Set(template);
-console.log(r);
 function template2Set(template) {
     const result = compiler.compile(template, {});
     return getVar([result.ast]);
