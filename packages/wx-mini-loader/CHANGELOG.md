@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.2.2
+
+### Patch Changes
+
+- 修复 v-for 循环临时变量问题
+
 ## 0.2.1
 
 ### Patch Changes
