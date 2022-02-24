@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-runtime
 
+## 0.1.1
+
+### Patch Changes
+
+- d.ts up
+
 ## 0.1.0
 
 ### Minor Changes
