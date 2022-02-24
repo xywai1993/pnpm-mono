@@ -145,7 +145,6 @@ const template = `
 </div>
 `;
 const r = template2Set(template);
-console.log(r);
 function template2Set(template) {
     const result = compiler.compile(template, {});
     return getVar([result.ast]);
