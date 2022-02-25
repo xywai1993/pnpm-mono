@@ -1,154 +1,39 @@
 <template>
     <div>
-        <div v-if="!hasUserInfo" class="g-flex-start-center header">
-            <div class="default-avatar"></div>
-            <div class="ml-15" @click="getUserInfo">
-                <div class="nickname">登录授权</div>
-                <div class="city mt-5">登录后创建你的小宠空间</div>
-            </div>
-        </div>
-        <div
-            v-if="hasUserInfo"
-            class="g-flex-start-center header"
-            @click="goTo('user-info', '', '')"
-        >
-            <div class="default-avatar">
-                <img :src="userInfo.avatar" class="g-img img-fill" />
-            </div>
-            <div class="ml-15">
-                <div class="nickname">{{ userInfo.nickname }}</div>
-                <div class="city">我的城市:{{ userInfo.city }}</div>
-            </div>
-        </div>
-        <div>
-            <h2 class="pet-column">我的宠物</h2>
-            <div class="g-flex pet-list">
-                <div v-for="li in petList" :key="li.id" class="pet-item" @click="goPetHome(li.id)">
-                    <div class="pet-avatar">
-                        <img :src="li.avatar" class="g-img" alt />
-                    </div>
-                    <p class="mt-5 fs-12 fsw-6em">{{ li.nickname }}</p>
-                </div>
-                <div v-if="petList.length < 3">
-                    <div class="pet-avatar pet-create-btn" @click="goAddPet('add-pet')">+</div>
-                    <p class="mt-5">创建新宠物</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="body">
-            <!-- <div class="adviser-info">创建你的宠物档案</div> -->
-            <ul class="menu">
-                <li class="g-flex-start-center menu-item" @click="goPage('pet-record')">
-                    <div class="menu-title doc-icon">宠物档案</div>
-                </li>
-                <li class="g-flex-start-center menu-item" @click="goPage('mine-list')">
-                    <div class="menu-title list-icon">我的清单</div>
-                </li>
-                <li class="g-flex-between-center menu-item" @click="goPage('visitor')">
-                    <div class="menu-title visitor-icon">最近访客</div>
-                    <div class="num">{{ userCenterData.new_visitor }}</div>
-                </li>
-                <li class="g-flex-between-center menu-item" @click="goPage('message-record')">
-                    <div class="menu-title tips-icon">消息通知</div>
-                    <div class="num">{{ userCenterData.new_message }}</div>
-                </li>
-            </ul>
-        </div>
-        <div>{{ li }}</div>
-
-        <nav-nav hover="d"></nav-nav>
+        <h1 class="tx-c">{{ num }}</h1>
+        <h2>计算属性：{{ num2 }}</h2>
+        <h3>计算 计算属性：{{ num3 }}</h3>
+        <div>监听：{{ watch.a }}</div>
+        <button @click="add">+1</button>
+        <hello-world :msg="num3"></hello-world>
     </div>
 </template>
 
 <config lang="json">
 {
     "backgroundColor": "#fff",
-    "usingComponents": { },
-    "navigationStyle": "custom"
+    "usingComponents": {
+        "hello-world":"/components/hello-world/main"
+     }
 }
 </config>
 <script  setup>
-import { pp, ppRef, onPageLoad, onPageLifetimes } from "@yiper.fan/wx-mini-runtime";
+import { pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect } from "@yiper.fan/wx-mini-runtime";
 
-const li = ppRef(111);
-const goTo = () => { };
-const { hasPet, getHasPet } = {
-    hasPet: true,
-    getHasPet: () => { }
-};
-const petList = ppRef([]);
-const hasUserInfo = ppRef(false);
-const userInfo = ppRef({ nickname: '', avatarUrl: '' })
-const userCenterData = ppRef({
-    "new_message": 0,			//新消息数量
-    "new_visitor": 0
+const num = ppRef(0);
+const watch = pp({ a: 0 })
+const num2 = pComputed(() => {
+    return num.value + 1000;
 })
-
-
-
-const getUserInfo = () => {
-    wx.getUserProfile({
-        desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-        success: (res) => {
-
-            if (!res.userInfo.avatarUrl) {
-                res.userInfo.avatarUrl = 'https://image.douba.cn/xiaomaitong/img/default-avatar@2x.ad344.png'
-            }
-            UpdateUserInfo(res.userInfo).then(() => {
-                hasUserInfo.value = true;
-                userInfo.value = res.userInfo;
-                wx.setStorageSync(constant.hasUserInfo, true);
-            })
-        }
-    })
-
+const num3 = pComputed(() => {
+    return num2.value + 1;
+})
+watchEffect(() => {
+    watch.a = num2.value + num3.value + num.value;
+})
+const add = () => {
+    num.value++;
 }
-
-onPageLoad((options) => {
-    console.log(options, '回调函数');
-})
-
-onPageLoad(options => {
-    console.log('回调函数2222');
-})
-
-onPageLifetimes('onShow', () => {
-    console.log('onPageShow');
-})
-
-onPageLifetimes('onShareAppMessage', (options) => {
-    console.log(options, 'onPageShow22222');
-    return {
-        title: 'Nihao',
-        path: '/pages/index/main'
-    }
-})
-
-const goPage = (page) => {
-
-    if (!hasPet.value) {
-        showToast('请先创建宠物档案')
-        return;
-    }
-
-    goTo(page)
-}
-
-const goAddPet = (page) => {
-    if (page == 'add-pet' && !hasUserInfo.value) {
-        showToast('请先授权登录')
-        return;
-    } else {
-        goTo(page)
-
-    }
-}
-
-const goPetHome = (id) => {
-    goTo('pet-home', { id })
-}
-
 </script>
 
 <style lang="less">

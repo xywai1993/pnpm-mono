@@ -1,5 +1,5 @@
 export declare function pp<T extends object>(obj: T): T;
-export declare function ppRef<T>(target: T): T;
+export declare function ppRef<T>(target: T): { value: T };
 export declare function pComputed(cb: Function): {
     value: any;
 };
