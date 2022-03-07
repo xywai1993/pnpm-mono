@@ -1,11 +1,18 @@
 const { template2Set, createSetupString } = require('../template-dynamic-var.cjs');
 
 test('template2Set: <div>{{hello}}</div> is ok', () => {
-    const template = `<div :class="[ani,'p'+index]">{{hello}}</div>`;
+    const template = `<div :class="[ani,'p'+index]">{{hello}} {{!show}}</div>`;
     const data = template2Set(template);
     expect(data.has('hello')).toBe(true);
     expect(data.has('ani')).toBe(true);
     expect(data.has('index')).toBe(true);
+    expect(data.has('show')).toBe(true);
+});
+
+test('template2Set: v-if is ok', () => {
+    const template = `<div v-if="!show" ></div>`;
+    const data = template2Set(template);
+    expect(data.has('show')).toBe(true);
 });
 
 test('template2Set: v-for index is ok', () => {
@@ -54,7 +61,7 @@ test('template2Set: 循环组件嵌套组件 is ok', () => {
     expect(data.has('li')).toBe(false);
 });
 
-test('createSetupString: <div>{{hello}}</div> is ok', () => {
+test('createSetupString: 补全setup is ok', () => {
     const oldCode = `const a = pp({b:1})`;
     const data = createSetupString(oldCode, ['a']);
     expect(data).toMatch('__SETUP__');

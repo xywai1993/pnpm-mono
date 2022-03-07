@@ -35,6 +35,9 @@ function parseAstGetVar(str, idArr, filterArr) {
             ObjectExpression: () => {
                 ast.properties.forEach((item) => parseAst(item.value));
             },
+            UnaryExpression: () => {
+                parseAst(ast.argument);
+            },
         };
 
         if (fn.hasOwnProperty(ast.type)) {
@@ -139,12 +142,11 @@ function getVar(children) {
 
 const template = `
 <div>      
-<div v-for="(li,index) in list"></div>
-<p>{{index}}</p>
-{{li}}
+{{!show}}
 </div>
 `;
 const r = template2Set(template);
+console.log(r);
 function template2Set(template) {
     const result = compiler.compile(template, {});
     return getVar([result.ast]);
