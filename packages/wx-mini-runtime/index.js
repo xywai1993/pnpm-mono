@@ -165,7 +165,7 @@ export const setup = (callback) => {
         } else {
             wxPage[key] = function (options) {
                 value.forEach((item) => {
-                    item(options);
+                    item.call(this, options);
                 });
             };
         }

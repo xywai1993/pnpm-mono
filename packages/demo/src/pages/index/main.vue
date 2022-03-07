@@ -34,6 +34,10 @@ watchEffect(() => {
 const add = () => {
     num.value++;
 }
+
+onPageLifetimes('onReady', function () {
+    console.log(this);
+})
 </script>
 
 <style lang="less">
