@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-runtime
 
+## 0.1.3
+
+### Patch Changes
+
+- fixbug
+
 ## 0.1.2
 
 ### Patch Changes
