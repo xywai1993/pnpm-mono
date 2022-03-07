@@ -163,7 +163,7 @@ export const setup = (callback) => {
         if (key === 'onShareAppMessage') {
             wxPage[key] = value[0];
         } else {
-            wxPage[key] = (options) => {
+            wxPage[key] = function (options) {
                 value.forEach((item) => {
                     item(options);
                 });
