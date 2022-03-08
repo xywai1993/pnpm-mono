@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-runtime
 
+## 0.1.4
+
+### Patch Changes
+
+- onLoad 存储错误
+
 ## 0.1.3
 
 ### Patch Changes
