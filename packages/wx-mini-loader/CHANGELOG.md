@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.2.3
+
+### Patch Changes
+
+- fix bug
+
 ## 0.2.2
 
 ### Patch Changes
