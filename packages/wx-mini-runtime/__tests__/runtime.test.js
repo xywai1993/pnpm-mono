@@ -1,4 +1,4 @@
-import { pp, ppRef } from '../index.js';
+import { pp, ppRef, pComputed } from '../index.js';
 
 test('pp proxy is ok', () => {
     const data = pp({ a: 1 });
@@ -12,4 +12,11 @@ test('ppRef proxy is ok', () => {
     expect(data.value).toBe(1);
     data.value = { b: 2 };
     expect(data.value.b).toBe(2);
+});
+
+test('pComputed proxy is ok', () => {
+    const data = ppRef(1);
+    const cData = pComputed(() => data.value + 1);
+    data.value = 2;
+    expect(cData.value).toBe(3);
 });

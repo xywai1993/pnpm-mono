@@ -126,10 +126,6 @@ const onPageLifetimesFnList = {
 };
 export const onPageLifetimes = (name, cb) => {
     if (typeof cb === 'function') {
-        if (name === 'onLoad') {
-            onLoadFnList.push(cb);
-            return;
-        }
         if (onPageLifetimesFnList.hasOwnProperty(name)) {
             onPageLifetimesFnList[name].push(cb);
         } else {

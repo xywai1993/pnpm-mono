@@ -38,6 +38,10 @@ const add = () => {
 onPageLifetimes('onReady', function () {
     console.log(this);
 })
+
+onPageLifetimes('onLoad', function () {
+    console.log(this, 'this onload');
+})
 </script>
 
 <style lang="less">
