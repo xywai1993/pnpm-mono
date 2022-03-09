@@ -19,6 +19,7 @@ importers:
     specifiers:
       '@yiper.fan/wx-mini-loader': workspace:^
       '@yiper.fan/wx-mini-runtime': workspace:^
+      '@yiper.fan/wx-mini-utils': workspace:^
       copy-webpack-plugin: ^10.2.4
       cross-env: ^7.0.3
       css-loader: ^6.5.0
@@ -44,6 +45,7 @@ importers:
     dependencies:
       '@yiper.fan/wx-mini-loader': link:../wx-mini-loader
       '@yiper.fan/wx-mini-runtime': link:../wx-mini-runtime
+      '@yiper.fan/wx-mini-utils': link:../wx-mini-utils
       copy-webpack-plugin: 10.2.4_webpack@5.69.1
       cross-env: 7.0.3
       css-loader: 6.6.0_webpack@5.69.1

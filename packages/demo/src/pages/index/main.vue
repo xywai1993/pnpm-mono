@@ -19,6 +19,8 @@
 </config>
 <script  setup>
 import { pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect } from "@yiper.fan/wx-mini-runtime";
+import { goTo } from "@yiper.fan/wx-mini-utils/dist/index";
+
 
 const num = ppRef(0);
 const watch = pp({ a: 0 })

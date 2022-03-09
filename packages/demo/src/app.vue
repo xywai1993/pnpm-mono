@@ -9,6 +9,7 @@ App({
 });
 </script>
 <style lang="less">
+@import url("@yiper.fan/wx-mini-utils/style/layout.less");
 ::-webkit-scrollbar {
     display: none;
     width: 0;

@@ -19,7 +19,7 @@
         "jest": "^27.5.1",
         "typescript": "^4.5.4"
     },
-    "packageManager": "pnpm",
+    "packageManager": "pnpm@6.31.0",
     "devDependencies": {
         "@changesets/cli": "^2.19.0"
     }
