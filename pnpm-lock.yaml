@@ -85,6 +85,9 @@ importers:
       '@types/wechat-miniprogram': 3.4.0
       '@vue/reactivity': 3.2.26
 
+  packages/wx-mini-utils:
+    specifiers: {}
+
 packages:
 
   /@ampproject/remapping/2.1.2:
