@@ -1,0 +1,15 @@
+{
+    "name": "@yiper.fan/wx-mini-utils",
+    "version": "1.0.0",
+    "description": "小程序工具库",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "files": [
+        "dist"
+    ]
+}
