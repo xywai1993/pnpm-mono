@@ -19,7 +19,7 @@
 </config>
 <script  setup>
 import { pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect } from "@yiper.fan/wx-mini-runtime";
-import { goTo } from "@yiper.fan/wx-mini-utils/dist/index";
+import { goTo } from "@yiper.fan/wx-mini-utils";
 
 
 const num = ppRef(0);
@@ -37,6 +37,7 @@ const add = () => {
     num.value++;
 }
 
+
 onPageLifetimes('onReady', function () {
     console.log(this);
 })
@@ -49,7 +50,6 @@ onPageLifetimes('onLoad', function () {
 <style lang="less">
 .nickname {
     font-size: 15px;
-    font-family: PingFang SC;
     font-weight: 600;
     color: #191919;
     opacity: 1;
@@ -90,7 +90,6 @@ onPageLifetimes('onLoad', function () {
 .menu-title {
     padding-left: 35px;
     font-size: 15px;
-    font-family: PingFang SC;
     font-weight: 500;
     color: #191919;
     opacity: 1;
@@ -116,10 +115,8 @@ onPageLifetimes('onLoad', function () {
     opacity: 1;
     border-radius: 20px;
     font-size: 15px;
-    font-family: PingFang SC;
     font-weight: 600;
     color: #191919;
-    opacity: 1;
     text-align: center;
 }
 
@@ -163,14 +160,11 @@ onPageLifetimes('onLoad', function () {
     opacity: 1;
     text-align: center;
     font-size: 10px;
-    font-family: PingFang SC;
     font-weight: 500;
     color: #ffffff;
-    opacity: 1;
 }
 .city {
     font-size: 12px;
-    font-family: PingFang SC;
     font-weight: 400;
     color: #999999;
     opacity: 1;
