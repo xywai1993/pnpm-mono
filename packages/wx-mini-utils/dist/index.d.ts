@@ -5,7 +5,6 @@ interface goToParams {
     type?: 1 | 2 | 3 | 4;
     package?: 'packageb' | 'packagec';
 }
-// type testUrl<T> = T extends [1, 2, 3] ? T : T;
 export declare function goTo(url: string | -1, query?: object, params?: goToParams): void;
 
 export declare function setUrlQuery(url: string, obj: object): string;

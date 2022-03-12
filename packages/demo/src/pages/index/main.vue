@@ -137,7 +137,7 @@ onPageLifetimes('onLoad', function () {
     box-shadow: 0px 3px 22px rgba(0, 0, 0, 0.16);
     opacity: 1;
     border-radius: 40px;
-    border: 5rpx solid #191919;
+    border: 5px solid #191919;
     overflow: hidden;
 
     > .g-img {

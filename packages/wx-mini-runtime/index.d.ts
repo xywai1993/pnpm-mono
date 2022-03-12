@@ -1,8 +1,13 @@
+declare type Ref<T> = { value: T };
+
 export declare function pp<T extends object>(obj: T): T;
+
 export declare function ppRef<T>(target: T): { value: T };
+
 export declare function pComputed(cb: Function): {
     value: any;
 };
+
 export declare const onPageLoad: (cb: Function) => void;
 
 type pageLife =
@@ -17,6 +22,7 @@ type pageLife =
     | 'onShareTimeline'
     | 'onAddToFavorites'
     | 'onPageScroll'
+    | 'onReachBottom'
     | 'onPullDownRefresh';
 export declare const onPageLifetimes: (name: pageLife, cb: Function) => void;
 
