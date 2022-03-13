@@ -1,0 +1,30 @@
+name: npm publish
+
+on:
+  push
+  # pull_request:
+  #     branches:
+  #         - master
+
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+jobs:
+   test:
+       name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+       runs-on: ${{ matrix.os }}
+       strategy:
+           matrix:
+               node_version: [14,16]
+               os: [ubuntu-latest, windows-latest, macos-latest]
+
+       steps:
+           - uses: actions/checkout@v2
+           - name: install pnpm
+             run: npm i pnpm@latest -g
+
+           - name: install dependencies
+             run: pnpm install
+
+           - name: run test
+             run: pnpm run jest-test
