@@ -3,24 +3,15 @@ const path = require('path');
 const compiler = require('vue-template-compiler');
 const { parse: vueSFCParse, compileScript, compileTemplate } = require('@vue/compiler-sfc');
 const template2WxTemplate = require('./vue.cjs');
+const {usePathInfo} = require("./lib/utils.cjs");
 
-function usePathInfo(src) {
-    const dirSrc = path.dirname(src);
-    const extName = path.extname(src);
-    const fileName = path.basename(src, extName);
 
-    return {
-        dirSrc,
-        fileName,
-        extName,
-    };
-}
 
 function transformTmp(nodeChild) {
     const list = ['div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'li'];
 
     return nodeChild.map((item) => {
-        if (item.node == 'element') {
+        if (item.node === 'element') {
             if (item.attr) {
                 item.attr = changeAttr(item.attr);
             }
@@ -62,8 +53,7 @@ module.exports = function (content) {
     const result = vueSFCParse(content);
     const descriptor = result.descriptor;
     const templateContent = descriptor.template.content;
-    // let templateJson = html2json(templateContent);
-    // templateJson.child = transformTmp(templateJson.child);
+
 
     if (result.descriptor.customBlocks.length) {
         result.descriptor.customBlocks.forEach((item) => {

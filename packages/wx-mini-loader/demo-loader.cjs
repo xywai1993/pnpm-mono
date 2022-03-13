@@ -1,23 +1,17 @@
 const { parse: vueSFCParse, compileScript } = require('@vue/compiler-sfc');
-const path = require('path/posix');
+// const path = require('path/posix');
+const path = require('path')
 const qs = require('querystring');
+const { platform } = require('os');
+
 // const loaderUtils = require('loader-utils');
 const { URL } = require('url');
 const { readFileSync } = require('fs');
 
 const { template2Set, createSetupString } = require('./template-dynamic-var.cjs');
+const {usePathToPosix} = require("./lib/utils.cjs");
 
-function usePathInfo(src) {
-    const dirSrc = path.dirname(src);
-    const extName = path.extname(src);
-    const fileName = path.basename(src, extName);
 
-    return {
-        dirSrc,
-        fileName,
-        extName,
-    };
-}
 
 module.exports = function (content, map, meta) {
     return `export default ''`;
@@ -30,10 +24,12 @@ module.exports.pitch = function (a) {
         const result = vueSFCParse(content2);
 
         const descriptor = result.descriptor;
-        const templateImport = descriptor.template ? `import template from '${a}?template'` : ``;
+
+        console.log(usePathToPosix(a))
+        const templateImport = descriptor.template ? `import template from '${usePathToPosix(a)}?template'` : ``;
         const styleImports = descriptor.styles
             .map((_, i) => {
-                return `import style${i} from '${a}?css'`;
+                return `import style${i} from '${usePathToPosix(a)}?css'`;
             })
             .join('\n');
 
@@ -45,8 +41,7 @@ module.exports.pitch = function (a) {
 
         if (descriptor.scriptSetup) {
             const defaultFrom = `import { setup as __SETUP__ } from "@yiper.fan/wx-mini-runtime";`;
-            const str = createSetupString(defaultFrom + descriptor.scriptSetup.content, [...template2Set(descriptor.template.content)]);
-            scriptContent = str;
+            scriptContent = createSetupString(defaultFrom + descriptor.scriptSetup.content, [...template2Set(descriptor.template.content)]);
         }
 
         let code = `
