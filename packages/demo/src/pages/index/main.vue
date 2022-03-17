@@ -18,7 +18,7 @@
 }
 </config>
 <script  setup>
-import { pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect } from "@yiper.fan/wx-mini-runtime";
+import {pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect} from "@yiper.fan/wx-mini-runtime";
 import { goTo } from "@yiper.fan/wx-mini-utils";
 
 

@@ -1,4 +1,4 @@
-declare type Ref<T> = { value: T };
+export declare type Ref<T> = { value: T };
 
 export declare function pp<T extends object>(obj: T): T;
 
@@ -11,19 +11,19 @@ export declare function pComputed(cb: Function): {
 export declare const onPageLoad: (cb: Function) => void;
 
 type pageLife =
-    | 'onLoad'
-    | 'onUnload'
-    | 'onReady'
-    | 'onShow'
-    | 'onHide'
-    | 'onShareAppMessage'
-    | 'onResize'
-    | 'onTabItemTap'
-    | 'onShareTimeline'
-    | 'onAddToFavorites'
-    | 'onPageScroll'
-    | 'onReachBottom'
-    | 'onPullDownRefresh';
+    | "onLoad"
+    | "onUnload"
+    | "onReady"
+    | "onShow"
+    | "onHide"
+    | "onShareAppMessage"
+    | "onResize"
+    | "onTabItemTap"
+    | "onShareTimeline"
+    | "onAddToFavorites"
+    | "onPageScroll"
+    | "onReachBottom"
+    | "onPullDownRefresh";
 export declare const onPageLifetimes: (name: pageLife, cb: Function) => void;
 
 /**
