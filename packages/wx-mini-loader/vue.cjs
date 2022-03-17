@@ -345,8 +345,7 @@ const template = `
  
 </div>
 `;
-const r = template2WxTemplate(template);
-console.log(r);
+// const r = template2WxTemplate(template);
 function template2WxTemplate(template) {
     const result = compiler.compile(template, {});
     return json2html({ node: 'root', child: t([result.ast]) });
