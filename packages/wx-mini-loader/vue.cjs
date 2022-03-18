@@ -62,6 +62,12 @@ function changeElementName(tagName) {
     return tagName;
 }
 
+function camel2median(str) {
+    const re = /([A-Z])/g
+    // console.log(str.replace(re,'-$1').toLowerCase())
+    return str.replace(re,'-$1').toLowerCase();
+}
+
 /**
  *
  * @param {string} bindStyle   类似这样的 "{'width':some+'px',height:some2}"
@@ -74,10 +80,26 @@ function changeBindStyle(bindStyle) {
     if (ast.type === 'ObjectExpression') {
         let styleStr = '';
         ast.properties.forEach((style) => {
+            const key = style.key.type === 'Identifier' ? camel2median(style.key.name)  : style.key.value;
+            let code = '';
             const value = style.value;
-            const key = style.key.type === 'Identifier' ? style.key.name : style.key.value;
-            const code = print(value).code;
-            styleStr += `;${key}:{{${code}}}`;
+            code = print(value).code;
+            if(value.type === 'TemplateLiteral'){
+                const re = /(\${(.+)})/;
+                value.quasis.forEach(v=>{
+                    code = code.replace(re,'{{$2}}')
+                })
+
+                code = code.replace(/^`/,'').replace(/`$/,'');
+
+                styleStr +=`;${key}:${code}`
+
+            }else{
+                styleStr += `;${key}:{{${code}}}`;
+            }
+
+
+
         });
 
         return styleStr;
@@ -118,7 +140,7 @@ function changeBindClass(bindClass) {
     // 格式2 {'a':some,b:c}
     if (ast.type === 'ObjectExpression') {
         ast.properties.forEach((item) => {
-            const key = item.key.type == 'Identifier' ? `'${item.key.name}'` : item.key.raw;
+            const key = item.key.type === 'Identifier' ? `'${item.key.name}'` : item.key.raw;
             const code = print(item.value);
             const val = `(${code.code})`;
 
@@ -191,17 +213,17 @@ function t(children) {
         o.tag = item.tag;
         o.type = item.type;
 
-        if (item.type == 1) {
+        if (item.type === 1) {
             o.node = 'element';
             o.tag = changeElementName(item.tag);
         }
 
-        if (item.type == 2) {
+        if (item.type === 2) {
             o.node = 'text';
             o.text = item.text;
         }
 
-        if (item.type == 3) {
+        if (item.type === 3) {
             o.node = 'text';
             o.text = item.text;
         }
@@ -339,13 +361,19 @@ function t(children) {
     });
 }
 
-const template = `
-<div>
-<div @confirm="bindConfirm(id)">点我点我</div>
- 
-</div>
-`;
+const template = '<div>\n' +
+    '<div style="color:{{color}}" :style="{backgroundColor:`${color}`}">点我点我</div>\n' +
+    '</div>'
+
+
 // const r = template2WxTemplate(template);
+
+
+
+
+
+
+
 function template2WxTemplate(template) {
     const result = compiler.compile(template, {});
     return json2html({ node: 'root', child: t([result.ast]) });

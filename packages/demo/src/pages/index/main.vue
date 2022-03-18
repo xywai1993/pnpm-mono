@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="tx-c">{{ num }}</h1>
+        <h1 class="tx-c" :style="{backgroundColor:`${color}`,lineHeight:`${lineHeight+30}px`}">{{ num }}</h1>
         <h2>计算属性：{{ num2 }}</h2>
         <h3>计算 计算属性：{{ num3 }}</h3>
         <div>监听：{{ watch.a }}</div>
@@ -21,7 +21,8 @@
 import {pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect} from "@yiper.fan/wx-mini-runtime";
 import { goTo } from "@yiper.fan/wx-mini-utils";
 
-
+const color = ppRef('red')
+const lineHeight= ppRef(40)
 const num = ppRef(0);
 const watch = pp({ a: 0 })
 const num2 = pComputed(() => {

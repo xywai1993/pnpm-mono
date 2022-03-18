@@ -38,6 +38,12 @@ function parseAstGetVar(str, idArr, filterArr) {
             UnaryExpression: () => {
                 parseAst(ast.argument);
             },
+            TemplateLiteral:()=>{
+                ast.expressions.forEach(item=>{
+                    parseAst(item)
+                })
+
+            }
         };
 
         if (fn.hasOwnProperty(ast.type)) {
@@ -140,12 +146,8 @@ function getVar(children) {
     return idArr;
 }
 
-const template = `
-<div>      
-{{!show}}
-</div>
-`;
-const r = template2Set(template);
+const template = '<div :style="{backgroundColor:\`${color}\`}">      \n{{!show}}\n</div>'
+// const r = template2Set(template);
 
 function template2Set(template) {
     const result = compiler.compile(template, {});
