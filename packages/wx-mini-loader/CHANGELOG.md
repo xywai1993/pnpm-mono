@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.2.5
+
+### Patch Changes
+
+- 更新对模板字符串的支持
+
 ## 0.2.4
 
 ### Patch Changes

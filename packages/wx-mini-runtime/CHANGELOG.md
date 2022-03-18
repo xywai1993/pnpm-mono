@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-runtime
 
+## 0.1.6
+
+### Patch Changes
+
+- 更新对模板字符串的支持
+
 ## 0.1.5
 
 ### Patch Changes
