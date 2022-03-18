@@ -28,7 +28,7 @@ console.log({ entry });
 module.exports = {
     entry,
     mode: 'development',
-    devtool: false,
+    devtool:'source-map',
     // mode: 'production',
     target: 'node',
     // output: { path: path.resolve(__dirname, './miniprogram') },
