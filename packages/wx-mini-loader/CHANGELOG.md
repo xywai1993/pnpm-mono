@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.2.4
+
+### Patch Changes
+
+- window-path
+
 ## 0.2.3
 
 ### Patch Changes
