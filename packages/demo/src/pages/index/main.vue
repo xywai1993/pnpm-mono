@@ -4,6 +4,13 @@
         <h2>计算属性：{{ num2 }}</h2>
         <h3>计算 计算属性：{{ num3 }}</h3>
         <div>监听：{{ watch.a }}</div>
+
+        <ul>
+            <li v-for="(li,index) in arr">
+                <div>{{index}}</div>
+                <div @click="remove(index)">remove</div>
+            </li>
+        </ul>
         <button @click="add">+1</button>
         <hello-world :msg="num3"></hello-world>
     </div>
@@ -31,21 +38,23 @@ const num2 = pComputed(() => {
 const num3 = pComputed(() => {
     return num2.value + 1;
 })
+const arr = ppRef([1,1,1]);
 watchEffect(() => {
     watch.a = num2.value + num3.value + num.value;
 })
 const add = () => {
-    num.value++;
+    // num.value++;
+    arr.value.push(1);
+    console.log( arr.value.length)
+}
+
+const remove = (index) => {
+  arr.value.splice(index,1);
+    console.log(arr.value.length)
 }
 
 
-onPageLifetimes('onReady', function () {
-    console.log(this);
-})
 
-onPageLifetimes('onLoad', function () {
-    console.log(this, 'this onload');
-})
 </script>
 
 <style lang="less">

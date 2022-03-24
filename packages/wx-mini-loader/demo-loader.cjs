@@ -25,7 +25,6 @@ module.exports.pitch = function (a) {
 
         const descriptor = result.descriptor;
 
-        console.log(usePathToPosix(a))
         const templateImport = descriptor.template ? `import template from '${usePathToPosix(a)}?template'` : ``;
         const styleImports = descriptor.styles
             .map((_, i) => {

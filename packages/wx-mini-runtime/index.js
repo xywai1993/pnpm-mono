@@ -60,20 +60,20 @@ function getDep(target, key) {
 export function pp(obj, params = { isRef: false }) {
     return new Proxy(obj, {
         get(target, key) {
-            if (key === '__is_p') {
+            if (key === "__is_p") {
                 return true;
             }
 
-            if (key == '__is_target') {
+            if (key === "__is_target") {
                 return target;
             }
 
-            if (key == '__is_p_ref') {
+            if (key === "__is_p_ref") {
                 return params.isRef;
             }
 
             const value = getDep(target, key).value;
-            if (value && typeof value === 'object') {
+            if (value && typeof value === "object") {
                 if (targetNameSpaceMap.has(target)) {
                     targetNameSpaceMap.set(value, `${targetNameSpaceMap.get(target)}.${key}`);
                 }
@@ -83,14 +83,15 @@ export function pp(obj, params = { isRef: false }) {
             }
         },
         set(target, key, value) {
+            getDep(target, key).value = value;
             if (uiThis && targetNameSpaceMap.has(target)) {
                 let path = `${targetNameSpaceMap.get(target)}`;
 
                 // 数组对象特殊处理
-                if (Array.isArray(target) && Number(key) !== NaN) {
+                if (Array.isArray(target) && !isNaN(Number(key))) {
                     path = `${path}[${key}]`;
 
-                    // console.log('数组路径', `${path}`);
+                    // console.log("数组路径", `${path}`);
                 } else {
                     /**
                      * tip:
@@ -98,20 +99,28 @@ export function pp(obj, params = { isRef: false }) {
                      *  eg: demoRef.value.0.demo ->  demoRef.value[0].demo
                      */
                     const re = /\.(?<num>\d+)\./g;
-                    path = `${path}.${key}`.replace(re, '[$<num>].');
-
-                    // console.log('常规路径', path);
+                    path = `${path}.${key}`.replace(re, "[$<num>].");
                 }
 
                 // 如果是ref 对象，自动解包
                 if (params.isRef) {
                     const removeValueRe = /\.value/;
-                    path = path.replace(removeValueRe, '');
+                    path = path.replace(removeValueRe, "");
                 }
-                console.log('setData path-->', path);
-                uiThis.setData({ [`${path}`]: value });
+                console.log("setData path-->", path, value);
+
+                //数组 .length 特殊处理
+                if (Array.isArray(target) && key === "length") {
+                    const removeLengthRe = /\.length/;
+                    path = path.replace(removeLengthRe, "");
+                    const _data = uiThis.data[path];
+                    _data.length = value;
+                    uiThis.setData({ [`${path}`]: _data });
+                } else {
+                    uiThis.setData({ [`${path}`]: value });
+                }
             }
-            getDep(target, key).value = value;
+
             return true;
         },
     });
@@ -125,7 +134,7 @@ const onPageLifetimesFnList = {
     onLoad: [],
 };
 export const onPageLifetimes = (name, cb) => {
-    if (typeof cb === 'function') {
+    if (typeof cb === "function") {
         if (onPageLifetimesFnList.hasOwnProperty(name)) {
             onPageLifetimesFnList[name].push(cb);
         } else {
@@ -139,8 +148,8 @@ export const onPageLifetimes = (name, cb) => {
  *
  */
 export const onPageLoad = (cb) => {
-    if (typeof cb === 'function') {
-        onPageLifetimesFnList['onLoad'].push(cb);
+    if (typeof cb === "function") {
+        onPageLifetimesFnList["onLoad"].push(cb);
     }
 };
 
@@ -156,7 +165,7 @@ export const setup = (callback) => {
         onPageLifetimesFnList.onLoad.push((options) => {});
     }
     for (const [key, value] of Object.entries(onPageLifetimesFnList)) {
-        if (key === 'onShareAppMessage') {
+        if (key === "onShareAppMessage") {
             wxPage[key] = value[0];
         } else {
             wxPage[key] = function (options) {
@@ -170,8 +179,8 @@ export const setup = (callback) => {
     const wxData = {};
 
     Object.entries(data).forEach((val) => {
-        if (typeof val[1] === 'function') {
-            if (val[0] === 'onLoad') {
+        if (typeof val[1] === "function") {
+            if (val[0] === "onLoad") {
                 const oldOnload = wxPage.onLoad;
                 wxPage[val[0]] = function (options) {
                     val[1](options);
@@ -192,18 +201,18 @@ export const setup = (callback) => {
         }
     });
 
-    wxPage['data'] = wxData;
+    wxPage["data"] = wxData;
 
     const p = new Proxy(wxPage, {
         get: function (obj, prop) {
-            if (prop === 'onLoad') {
+            if (prop === "onLoad") {
                 return function (e) {
                     uiThis = this;
                     obj[prop].call(this, e);
                 };
             }
 
-            if (typeof obj[prop] === 'function') {
+            if (typeof obj[prop] === "function") {
                 return function (e) {
                     /**
                      * tip
@@ -212,19 +221,19 @@ export const setup = (callback) => {
                      *  注意：因为小程序不支持动态执行方法，因此只能做简单的赋值操作，太复杂的不支持
                      */
 
-                    if (prop === '__AssignmentExpression') {
-                        const ps = String(e.currentTarget.dataset.eventParams).split(',');
+                    if (prop === "__AssignmentExpression") {
+                        const ps = String(e.currentTarget.dataset.eventParams).split(",");
 
-                        const path = ps[0].split('.');
+                        const path = ps[0].split(".");
 
                         // 最后一个路径为赋值操作路径
                         const last = path.pop();
 
                         let tmp = null;
                         let val = ps[1];
-                        if (ps[1] === 'true') {
+                        if (ps[1] === "true") {
                             val = true;
-                        } else if (ps[1] === 'false') {
+                        } else if (ps[1] === "false") {
                             val = false;
                         }
 
@@ -246,8 +255,8 @@ export const setup = (callback) => {
 
                     // tip onUnload 事件不存在 e
                     if (e && e.currentTarget) {
-                        if (e.currentTarget.dataset.hasOwnProperty('eventParams')) {
-                            const ps = String(e.currentTarget.dataset.eventParams).split(',');
+                        if (e.currentTarget.dataset.hasOwnProperty("eventParams")) {
+                            const ps = String(e.currentTarget.dataset.eventParams).split(",");
 
                             // tip 把类数字都转换为数字
                             const stringToNumberPs = ps.map((item) => {
@@ -281,13 +290,13 @@ export const pComputed = (cb) => {
         { value: cb() },
         {
             get(target, p) {
-                if (p == '__is_p_ref') {
+                if (p == "__is_p_ref") {
                     return true;
                 }
-                if (p == '__is_target') {
+                if (p == "__is_target") {
                     return cb;
                 }
-                if (p == 'value') {
+                if (p == "value") {
                     return cb();
                 }
                 return Reflect.get(target, p);
