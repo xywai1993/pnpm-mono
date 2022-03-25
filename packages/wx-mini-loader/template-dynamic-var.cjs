@@ -107,8 +107,13 @@ function t(children, idArr, fA) {
         // 指令
         if (item.directives) {
             item.directives.forEach((directives) => {
-                if (directives.rawName == 'v-show') {
+                if (directives.rawName === 'v-show') {
                     // o.attr['hidden'] = `{{${directives.value}}}`;
+                }
+
+                if(directives.rawName === 'v-model' && item.tag === 'input'){
+
+                    parseAstGetVar(directives.value,idArr,filterArr);
                 }
             });
         }
@@ -146,7 +151,7 @@ function getVar(children) {
     return idArr;
 }
 
-const template = '<div :style="{backgroundColor:\`${color}\`}">      \n{{!show}}\n</div>'
+const template = '<input v-model="ddd">'
 // const r = template2Set(template);
 
 function template2Set(template) {

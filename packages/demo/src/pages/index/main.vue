@@ -1,18 +1,10 @@
 <template>
     <div>
-        <h1 class="tx-c" :style="{backgroundColor:`${color}`,lineHeight:`${lineHeight+30}px`}">{{ num }}</h1>
-        <h2>计算属性：{{ num2 }}</h2>
-        <h3>计算 计算属性：{{ num3 }}</h3>
-        <div>监听：{{ watch.a }}</div>
+        <textarea v-model="text.b" type="text"></textarea>
 
-        <ul>
-            <li v-for="(li,index) in arr">
-                <div>{{index}}</div>
-                <div @click="remove(index)">remove</div>
-            </li>
-        </ul>
-        <button @click="add">+1</button>
-        <hello-world :msg="num3"></hello-world>
+        <div @click="text.b = true" style="height: 50px;background: #191919">11111</div>
+
+        <div v-if="text.b">22222</div>
     </div>
 </template>
 
@@ -28,30 +20,8 @@
 import {pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect} from "@yiper.fan/wx-mini-runtime";
 import { goTo } from "@yiper.fan/wx-mini-utils";
 
-const color = ppRef('red')
-const lineHeight= ppRef(40)
-const num = ppRef(0);
-const watch = pp({ a: 0 })
-const num2 = pComputed(() => {
-    return num.value + 1000;
-})
-const num3 = pComputed(() => {
-    return num2.value + 1;
-})
-const arr = ppRef([1,1,1]);
-watchEffect(() => {
-    watch.a = num2.value + num3.value + num.value;
-})
-const add = () => {
-    // num.value++;
-    arr.value.push(1);
-    console.log( arr.value.length)
-}
-
-const remove = (index) => {
-  arr.value.splice(index,1);
-    console.log(arr.value.length)
-}
+const show = ppRef(false);
+const text=pp({a:['你好',false],b:false})
 
 
 

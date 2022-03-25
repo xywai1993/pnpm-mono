@@ -107,7 +107,7 @@ export function pp(obj, params = { isRef: false }) {
                     const removeValueRe = /\.value/;
                     path = path.replace(removeValueRe, "");
                 }
-                console.log("setData path-->", path, value);
+                console.log("setData path-->", path);
 
                 //数组 .length 特殊处理
                 if (Array.isArray(target) && key === "length") {
@@ -158,6 +158,8 @@ export const setup = (callback) => {
     const wxPage = {
         // tip  @click="show=true" 这种写法将被 编译为 @click="__AssignmentExpression" ,因此预先内置
         __AssignmentExpression: () => {},
+        //tip v-model 将被编译为 bindinput="__vModelEventResponses",因此预先内置
+        __vModelEventResponses: () => {},
     };
 
     // 确保onLoad 必定有一个
@@ -216,20 +218,13 @@ export const setup = (callback) => {
                 return function (e) {
                     /**
                      * tip
-                     *  赋能点击事件可以直接赋值操作 eg:  @click="show=true" 或 @click="demo.a.b = 3"
-                     *  数组赋值不支持！ 即 @click="arr[1] == 3" 不支持！！
+                     *  赋能点击事件可以直接赋值操作 eg:  @click="show=true 或 demo.a.b = 3 或 demo[1] = true"
                      *  注意：因为小程序不支持动态执行方法，因此只能做简单的赋值操作，太复杂的不支持
                      */
 
                     if (prop === "__AssignmentExpression") {
                         const ps = String(e.currentTarget.dataset.eventParams).split(",");
 
-                        const path = ps[0].split(".");
-
-                        // 最后一个路径为赋值操作路径
-                        const last = path.pop();
-
-                        let tmp = null;
                         let val = ps[1];
                         if (ps[1] === "true") {
                             val = true;
@@ -237,18 +232,16 @@ export const setup = (callback) => {
                             val = false;
                         }
 
-                        // 存在深度路径则依次读取路径数据
-                        path.forEach((item) => {
-                            tmp = tmp ? tmp[item] : data[item];
-                        });
+                        setDataBeforeUser(data, ps[0], val);
 
-                        tmp = tmp ? tmp : data[last];
+                        return;
+                    }
 
-                        if (tmp.__is_p_ref) {
-                            tmp.value = val;
-                        } else {
-                            tmp[last] = val;
-                        }
+                    if (prop === "__vModelEventResponses") {
+                        const value = e.detail.value;
+                        const ps = String(e.currentTarget.dataset.vmodelParams);
+
+                        setDataBeforeUser(data, ps, value);
 
                         return;
                     }
@@ -290,13 +283,13 @@ export const pComputed = (cb) => {
         { value: cb() },
         {
             get(target, p) {
-                if (p == "__is_p_ref") {
+                if (p === "__is_p_ref") {
                     return true;
                 }
-                if (p == "__is_target") {
+                if (p === "__is_target") {
                     return cb;
                 }
-                if (p == "value") {
+                if (p === "value") {
                     return cb();
                 }
                 return Reflect.get(target, p);
@@ -313,3 +306,40 @@ export const pComputed = (cb) => {
 
     return p;
 };
+
+/**
+ * //在用户之前设置data , 即配合 v-model 之类的做一些快捷操作
+ * @param data 页面数据 ----  setup中callback返回的页面数据
+ * @param pathParams  数据的路径信息  eg: demoRef.a.b  , demoRef[0] , demoRef
+ * @param value 要设置的值   demoRef.a.b = value
+ */
+function setDataBeforeUser(data, pathParams, value) {
+    /**
+     * tip:
+     *  把中间是  "[0]"  这样的格式替换为点格式 ".0"
+     *  eg:   demoRef[0].demo -> demoRef.0.demo
+     */
+    const re = /\[(?<num>\d+)]/g;
+    let path = pathParams.replace(re, ".$<num>");
+
+    //分割"点"（.）路径
+    path = path.split(".");
+
+    // 最后一个路径为赋值操作路径
+    const last = path.pop();
+
+    let tmp = null;
+
+    // 存在深度路径则依次读取路径数据
+    path.forEach((item) => {
+        tmp = tmp ? tmp[item] : data[item];
+    });
+
+    tmp = tmp ? tmp : data[last];
+
+    if (tmp.__is_p_ref) {
+        tmp.value = value;
+    } else {
+        tmp[last] = value;
+    }
+}

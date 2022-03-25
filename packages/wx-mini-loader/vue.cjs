@@ -125,7 +125,7 @@ function changeBindClass(bindClass) {
     // 格式1 [a,b.c,c+'f']
     if (ast.type === 'ArrayExpression') {
         ast.elements.forEach((item) => {
-            if (item.type == 'Identifier') {
+            if (item.type === 'Identifier') {
                 classArr.push(`{{${item.name}}}`);
             }
 
@@ -243,7 +243,7 @@ function t(children) {
                 o.attr['wx:for-index'] = `index`;
             }
 
-            // eg:  li.id to id  wx:key="id"
+            // eg:  li.id -> id  wx:key="id"
             if (item.key) {
                 const re = new RegExp(`^${item.alias}\.`);
                 o.attr['wx:key'] = `${item.key.replace(re, '')}`;
@@ -254,7 +254,7 @@ function t(children) {
             item.attrs.forEach((attr, i) => {
                 const name = item.attrs[i].name;
 
-                // todo: 这里很奇怪，经过vue转换后的数据 ，dynamic的值动态的为 false ，非动态为 undefined
+                // tips: 这里很奇怪，经过vue转换后的数据 ，dynamic的值动态的为 false ，非动态为 undefined
                 if (attr.dynamic === false) {
                     o.attr[name] = `{{${attr.value}}}`;
                 } else {
@@ -290,8 +290,15 @@ function t(children) {
         // 指令
         if (item.directives) {
             item.directives.forEach((directives) => {
-                if (directives.rawName == 'v-show') {
+                if (directives.rawName === 'v-show') {
                     o.attr['hidden'] = `{{${directives.value}}}`;
+                }
+
+                const input = ['input','textarea'];
+                if(directives.rawName === 'v-model' && input.indexOf(item.tag) !== -1){
+                    o.attr['value'] = `{{${directives.value}}}`
+                    o.attr['bindinput'] = `__vModelEventResponses`
+                    o.attr['data-vmodel-params'] = `${directives.value}`
                 }
             });
         }
@@ -299,9 +306,13 @@ function t(children) {
         // 事件
         if (item.events) {
             Object.entries(item.events).forEach((key) => {
+                //小程序没有input事件
+                if(key[0]==='input'){
+                    return ;
+                }
                 // 转换事件名 click -> tap 、touchmove-> touchmove、等
                 const bindOrCatch = key[1].modifiers?.stop ? 'catch' : 'bind';
-                const wxEventName = key[0] == 'click' ? `${bindOrCatch}:tap` : `${bindOrCatch}:${key[0]}`;
+                const wxEventName = key[0] === 'click' ? `${bindOrCatch}:tap` : `${bindOrCatch}:${key[0]}`;
 
                 // 转换响应函数
 
@@ -361,13 +372,11 @@ function t(children) {
     });
 }
 
-const template = '<div>\n' +
-    '<div style="color:{{color}}" :style="{backgroundColor:`${color}`}">点我点我</div>\n' +
-    '</div>'
+const template = `
+<textarea v-model="a" type="text"></textarea> `
 
 
 // const r = template2WxTemplate(template);
-
 
 
 
