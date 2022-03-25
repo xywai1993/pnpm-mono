@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-runtime
 
+## 0.3.0
+
+### Minor Changes
+
+-   v-dmeo 的支持
+
 ## 0.2.0
 
 ### Minor Changes

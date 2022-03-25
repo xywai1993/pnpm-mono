@@ -1,5 +1,13 @@
 # @yiper.fan/demo
 
+## 1.1.12
+
+### Patch Changes
+
+-   Updated dependencies
+    -   @yiper.fan/wx-mini-loader@0.3.0
+    -   @yiper.fan/wx-mini-runtime@0.3.0
+
 ## 1.1.11
 
 ### Patch Changes

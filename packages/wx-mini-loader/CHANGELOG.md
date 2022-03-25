@@ -1,5 +1,11 @@
 # @yiper.fan/wx-mini-loader
 
+## 0.3.0
+
+### Minor Changes
+
+-   v-dmeo 的支持
+
 ## 0.2.6
 
 ### Patch Changes
