@@ -111,8 +111,8 @@ function t(children, idArr, fA) {
                     // o.attr['hidden'] = `{{${directives.value}}}`;
                 }
 
-                if(directives.rawName === 'v-model' && item.tag === 'input'){
-
+                const inputTag = ['input','textarea']
+                if(directives.rawName === 'v-model' && inputTag.indexOf(item.tag) !== -1){
                     parseAstGetVar(directives.value,idArr,filterArr);
                 }
             });

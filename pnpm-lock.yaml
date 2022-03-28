@@ -84,10 +84,8 @@ importers:
   packages/wx-mini-runtime:
     specifiers:
       '@types/wechat-miniprogram': ^3.4.0
-      '@vue/reactivity': ^3.2.26
     dependencies:
       '@types/wechat-miniprogram': 3.4.0
-      '@vue/reactivity': 3.2.26
 
   packages/wx-mini-utils:
     specifiers: {}
@@ -1006,12 +1004,6 @@ packages:
       '@vue/shared': 3.2.26
       estree-walker: 2.0.2
       magic-string: 0.25.7
-    dev: false
-
-  /@vue/reactivity/3.2.26:
-    resolution: {integrity: sha512-h38bxCZLW6oFJVDlCcAiUKFnXI8xP8d+eO0pcDxx+7dQfSPje2AO6M9S9QO6MrxQB7fGP0DH0dYQ8ksf6hrXKQ==}
-    dependencies:
-      '@vue/shared': 3.2.26
     dev: false
 
   /@vue/shared/3.2.26:

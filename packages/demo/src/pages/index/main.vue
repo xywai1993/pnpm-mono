@@ -1,10 +1,10 @@
 <template>
     <div>
-        <textarea v-model="text.b" type="text"></textarea>
+        <textarea v-model="text" type="text"></textarea>
 
-        <div @click="text.b = true" style="height: 50px;background: #191919">11111</div>
+        <div @click="add" style="height: 50px;background: #191919">add</div>
 
-        <div v-if="text.b">22222</div>
+
     </div>
 </template>
 
@@ -21,9 +21,11 @@ import {pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect} from "@y
 import { goTo } from "@yiper.fan/wx-mini-utils";
 
 const show = ppRef(false);
-const text=pp({a:['你好',false],b:false})
+const text=ppRef('');
 
-
+const add = () => {
+    console.log(text.value);
+}
 
 </script>
 

@@ -72,9 +72,9 @@ test("v-model is ok ", () => {
     const data = template2Set(template);
     expect(data.has("ddd")).toBe(true);
 
-    const template2 = '<textarea v-model="ddd"></textarea>';
+    const template2 = '<textarea v-model="text"></textarea>';
     const data2 = template2Set(template2);
-    expect(data.has("ddd")).toBe(true);
+    expect(data2.has("text")).toBe(true);
 });
 
 test("createSetupString: 补全setup is ok", () => {
