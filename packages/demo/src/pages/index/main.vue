@@ -1,154 +1,153 @@
 <template>
-    <div>
-        <textarea v-model="text" type="text"></textarea>
+    <div class="body">
+        <div class="g-flex-start-center pd-rl mt-30">
+            <h1 class="c-main fs-20">标签</h1>
+            <p class="c-999 fs-12 ml-5">最多添加6个</p>
+        </div>
 
-        <div @click="add" style="height: 50px;background: #191919">add</div>
-
-
+        <ul class="g-flex flex-wrap tag-box border-bottom info">
+            <li class="tag" v-for="(li, index) in tags" :key="li.id">
+                <div>{{ li.title }}</div>
+                <div class="remove" @click="remove(index)"></div>
+            </li>
+        </ul>
+        <div class="g-flex pd-rl mt-30">
+            <div class="flex-1">
+                <textarea class="input" v-model="text"></textarea>
+            </div>
+            <div class="add-btn" @click="add">添加</div>
+        </div>
+        <div class="btn" @click="submit">提交修改</div>
     </div>
 </template>
-
 <config lang="json">
 {
-    "backgroundColor": "#fff",
-    "usingComponents": {
-        "hello-world":"/components/hello-world/main"
-     }
+"backgroundColor": "#fff",
+"navigationBarTitleText": "编辑个性标签",
+"usingComponents": {}
 }
 </config>
-<script  setup>
-import {pp, ppRef, onPageLoad, onPageLifetimes, pComputed, watchEffect} from "@yiper.fan/wx-mini-runtime";
-import { goTo } from "@yiper.fan/wx-mini-utils";
+<script setup>
+import { ppRef, watchEffect } from "@yiper.fan/wx-mini-runtime";
+const tags = ppRef([{id:1,title:11},{id:2,title:22}]);
+const text = ppRef("");
 
-const show = ppRef(false);
-const text=ppRef('');
+
+
+const remove = (index) => {
+    tags.value.splice(index, 1);
+};
+
+const submit = () => {
+
+    const tag = tags.value.map((item) => {
+        return {
+            id: item.id ? item.id : 'null',
+            title: item.title,
+        };
+    });
+
+    console.log(tag);
+
+
+
+
+};
 
 const add = () => {
-    console.log(text.value);
-}
+    if (text.value) {
 
+        const _data = [...tags.value];
+        _data.push({
+            id:3,
+            title: text.value,
+        });
+        tags.value = _data;
+        console.log(tags.value);
+    }
+};
 </script>
 
-<style lang="less">
-.nickname {
-    font-size: 15px;
-    font-weight: 600;
-    color: #191919;
-    opacity: 1;
+<style lang="less" scoped>
+.body {
+    padding: 0 0 calc(10px + env(safe-area-inset-bottom));
+    min-height: 100vh;
 }
-.pet-column {
-    border-top: 10px solid #f6f6f6;
-    padding: 15px 0 0 20px;
-    font-weight: bold;
+.info {
+    padding: 0 20px;
 }
 
-.pet-item {
-    margin: 0 5px;
-    text-align: center;
+.border-top {
+    border-top: 1px solid #f6f6f6;
 }
-.pet-list {
-    padding: 20px;
-}
-.pet-avatar {
-    margin: 0 auto;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    > .g-img {
-        object-fit: fill;
-        height: 50px;
-    }
-}
-.pet-create-btn {
-    line-height: 45px;
-    height: 48px;
-    font-size: 30px;
-    text-align: center;
-    font-weight: bold;
-    border: 1px solid #ededed;
-}
-
-.menu-title {
-    padding-left: 35px;
-    font-size: 15px;
-    font-weight: 500;
-    color: #191919;
-    opacity: 1;
-}
-.menu-item {
-    height: 60px;
-
+.border-bottom {
     border-bottom: 1px solid #f6f6f6;
 }
 
-.body {
-    border-top: 10px solid #f6f6f6;
-    padding: 0 15px;
-}
-.adviser-info {
-    margin: 20px auto 0;
-    width: 331px;
-    height: 54px;
-    line-height: 54px;
-    background: #ffffff;
-    border: 2px solid #191919;
-    box-shadow: 0px 9px 0px rgba(0, 0, 0, 0.06);
-    opacity: 1;
-    border-radius: 20px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #191919;
-    text-align: center;
-}
-
-.avatar {
-    width: 80px;
-    height: 80px;
-    box-shadow: 0px 3px 22px rgba(0, 0, 0, 0.16);
-    opacity: 1;
-    border-radius: 40px;
-    overflow: hidden;
-}
-.default-avatar {
-    width: 65px;
-    height: 65px;
-    box-shadow: 0px 3px 22px rgba(0, 0, 0, 0.16);
-    opacity: 1;
-    border-radius: 40px;
-    border: 5px solid #191919;
-    overflow: hidden;
-
-    > .g-img {
-        height: 60px;
-    }
-}
-
-.header {
-    // margin-top: calc(-44px - env(safe-area-inset-top));
-    width: 100%;
-    padding: 20px;
-    opacity: 1;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-.num {
-    margin-right: 20px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-    background: #ff3333;
-    border-radius: 50%;
-    opacity: 1;
-    text-align: center;
+.tips {
+    color: #c4c4c4;
     font-size: 10px;
-    font-weight: 500;
+}
+.btn {
+    margin: 30px auto 0;
+    width: 242px;
+    height: 43px;
+    background: linear-gradient(90deg, #3d3dfc 0%, #6884ff 100%);
+    border-radius: 8px 8px 8px 8px;
+    opacity: 1;
+    text-align: center;
+    line-height: 43px;
     color: #ffffff;
 }
-.city {
-    font-size: 12px;
+.tag-box {
+    padding: 20px;
+}
+.tag {
+    position: relative;
+    margin: 10px;
+    padding: 0 20px;
+    font-size: 13px;
     font-weight: 400;
-    color: #999999;
+    color: #f84235;
     opacity: 1;
+    height: 29px;
+    line-height: 29px;
+    background: rgba(248, 66, 53, 0.08);
+    border-radius: 30px;
+}
+.remove {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    width: 25px;
+    height: 25px;
+}
+.action-btn {
+    width: 39px;
+    height: 39px;
+}
+
+.fs-20 {
+    font-size: 20px;
+}
+.input {
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 93px;
+    background: #f9f9f9;
+    border-radius: 8px 8px 8px 8px;
+    border: 1px solid #e3e3e3;
+}
+.add-btn {
+    margin-left: 10px;
+    width: 68px;
+    height: 44px;
+    background: #ffffff;
+    border-radius: 8px 8px 8px 8px;
+    opacity: 0.8;
+    border: 1px solid #e3e3e3;
+    line-height: 44px;
+    text-align: center;
 }
 </style>
