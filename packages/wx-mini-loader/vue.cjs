@@ -328,7 +328,7 @@ function t(children) {
         }
         // 静态class
         if (item.staticClass) {
-            if (o.attr.class) {
+            if ( Array.isArray(o.attr.class) ) {
                 o.attr.class.push(item.staticClass);
             } else {
                 o.attr['class'] = [removeQuote(item.staticClass)];
@@ -372,11 +372,12 @@ function t(children) {
     });
 }
 
-const template = `
-<textarea v-model="a" type="text"></textarea> `
-
+const template = '<div class="flex-1" :style="{ backgroundImage: \`url(${userInfo.avatar})\` }" class="avatar-img"></div>'
+// const template = '<div class="aaa" class="bbb"></div>'
 
 // const r = template2WxTemplate(template);
+
+
 
 
 

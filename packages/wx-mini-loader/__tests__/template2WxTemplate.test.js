@@ -42,6 +42,10 @@ test("模板字符串 is OK", () => {
     const template = '<div :style="{backgroundColor:`${color}`}"></div>';
     const data = t2w(template);
     expect(data).toMatch(`background-color:{{color}}`);
+
+    const template2 = '<div  :style="{ backgroundImage: `url(${userInfo.avatar})` }" ></div>\n';
+    const data2 = t2w(template2);
+    expect(data2).toMatch(`background-image:url({{userInfo.avatar}})`);
 });
 
 test("v-mdoel is ok ", () => {
@@ -56,4 +60,11 @@ test("v-mdoel is ok ", () => {
     expect(data2).toMatch(`bindinput="__vModelEventResponses"`);
     expect(data2).toMatch(`value="{{demo}}"`);
     expect(data2).toMatch(`data-vmodel-params="demo"`);
+});
+
+test("多个class ，后面的覆盖前面的", () => {
+    const template = '<div class="aaa" class="bbb"></div>';
+    const data = t2w(template);
+    expect(data).not.toMatch(`class="aaa"`);
+    expect(data).toMatch(`class="bbb"`);
 });
