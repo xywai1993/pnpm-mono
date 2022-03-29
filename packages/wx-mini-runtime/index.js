@@ -2,6 +2,21 @@ function warn(msg, ...args) {
     console.warn(`[mini-runtime warn] ${msg}`, ...args);
 }
 
+const arrFunName = [
+    "push",
+    "pop",
+    "shift",
+    "unshift",
+    "split",
+    "reverse",
+    "map",
+    "forEach",
+    "every",
+    "filter",
+    "fill",
+    "length",
+];
+
 let activeEffect;
 
 class Dep {
@@ -72,10 +87,10 @@ export function pp(obj, params = { isRef: false }) {
                 return params.isRef;
             }
 
-            // const arrFuName = ["push"];
-            // if (arrFuName.indexOf(key) !== -1) {
-            //     return Reflect.get(target, key);
-            // }
+            //tip 数组方法不需要包装响应式
+            if (Array.isArray(target) && arrFunName.indexOf(key) !== -1) {
+                return Reflect.get(target, key, receiver);
+            }
 
             const value = getDep(target, key).value;
 

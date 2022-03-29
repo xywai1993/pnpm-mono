@@ -21,7 +21,7 @@ test("pComputed proxy is ok", () => {
     expect(cData.value).toBe(3);
 });
 
-test("array is ok", () => {
+test("array push is  ok", () => {
     const data = ppRef([1, 2]);
 
     data.value.push(3);
@@ -31,4 +31,15 @@ test("array is ok", () => {
     expect(data.value[0]).toBe(1);
     expect(data.value[1]).toBe(2);
     expect(data.value.length).toBe(2);
+});
+
+test("array splice is  ok", () => {
+    const data = ppRef([1, 2, 3, 4]);
+
+    data.value.splice(2, 1);
+    expect(data.value.length).toBe(3);
+
+    expect(data.value[0]).toBe(1);
+    expect(data.value[1]).toBe(2);
+    expect(data.value[2]).toBe(4);
 });

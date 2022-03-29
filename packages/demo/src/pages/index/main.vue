@@ -43,13 +43,14 @@ const submit = () => {
 
 
 
-    console.log(tags.value);
+
 
     // tags.value.forEach(item=>{
     //     console.log(item.title);
     // })
 
-    tags.value[2].title = '123'
+    // tags.value[2].title = '123'
+    console.log(tags.value);
 
 };
 
