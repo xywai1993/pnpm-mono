@@ -18,6 +18,7 @@
             <div class="add-btn" @click="add">添加</div>
         </div>
         <div class="btn" @click="submit">提交修改</div>
+
     </div>
 </template>
 <config lang="json">
@@ -40,32 +41,33 @@ const remove = (index) => {
 
 const submit = () => {
 
-    const tag = tags.value.map((item) => {
-        return {
-            id: item.id ? item.id : 'null',
-            title: item.title,
-        };
-    });
-
-    console.log(tag);
 
 
+    console.log(tags.value);
 
+    // tags.value.forEach(item=>{
+    //     console.log(item.title);
+    // })
+
+    tags.value[2].title = '123'
 
 };
 
 const add = () => {
     if (text.value) {
 
-        const _data = [...tags.value];
-        _data.push({
+        // const _data = [...tags.value];
+
+        tags.value.push({
             id:3,
             title: text.value,
         });
-        tags.value = _data;
-        console.log(tags.value);
+
+
     }
 };
+
+
 </script>
 
 <style lang="less" scoped>

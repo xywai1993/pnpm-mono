@@ -59,7 +59,7 @@ function getDep(target, key) {
 
 export function pp(obj, params = { isRef: false }) {
     return new Proxy(obj, {
-        get(target, key) {
+        get(target, key, receiver) {
             if (key === "__is_p") {
                 return true;
             }
@@ -72,7 +72,13 @@ export function pp(obj, params = { isRef: false }) {
                 return params.isRef;
             }
 
+            // const arrFuName = ["push"];
+            // if (arrFuName.indexOf(key) !== -1) {
+            //     return Reflect.get(target, key);
+            // }
+
             const value = getDep(target, key).value;
+
             if (value && typeof value === "object") {
                 if (targetNameSpaceMap.has(target)) {
                     targetNameSpaceMap.set(value, `${targetNameSpaceMap.get(target)}.${key}`);
@@ -82,7 +88,7 @@ export function pp(obj, params = { isRef: false }) {
                 return value;
             }
         },
-        set(target, key, value) {
+        set(target, key, value, receiver) {
             getDep(target, key).value = value;
             if (uiThis && targetNameSpaceMap.has(target)) {
                 let path = `${targetNameSpaceMap.get(target)}`;
@@ -90,8 +96,6 @@ export function pp(obj, params = { isRef: false }) {
                 // 数组对象特殊处理
                 if (Array.isArray(target) && !isNaN(Number(key))) {
                     path = `${path}[${key}]`;
-
-                    // console.log("数组路径", `${path}`);
                 } else {
                     /**
                      * tip:
@@ -121,7 +125,7 @@ export function pp(obj, params = { isRef: false }) {
                 }
             }
 
-            return true;
+            return Reflect.set(target, key, value);
         },
     });
 }
