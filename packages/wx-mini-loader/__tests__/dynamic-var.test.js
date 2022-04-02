@@ -7,6 +7,10 @@ test("template2Set: <div>{{hello}}</div> is ok", () => {
     expect(data.has("ani")).toBe(true);
     expect(data.has("index")).toBe(true);
     expect(data.has("show")).toBe(true);
+
+    const t2 = `<div>{{ audioPlayerData.play ? "暂停" : "试听" }}</div>`;
+    const d2 = template2Set(t2);
+    expect(d2.has("audioPlayerData")).toBe(true);
 });
 
 test("template2Set: v-if is ok", () => {

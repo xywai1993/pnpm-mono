@@ -42,7 +42,9 @@ function parseAstGetVar(str, idArr, filterArr) {
                 ast.expressions.forEach(item=>{
                     parseAst(item)
                 })
-
+            },
+            ConditionalExpression:()=>{
+                parseAst(ast.test);
             }
         };
 
@@ -151,7 +153,7 @@ function getVar(children) {
     return idArr;
 }
 
-const template = '<input v-model="ddd">'
+const template = `<div>{{ audioPlayerData.play ? "暂停" : "试听" }}</div>`
 // const r = template2Set(template);
 
 function template2Set(template) {
