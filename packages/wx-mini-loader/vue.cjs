@@ -306,8 +306,8 @@ function t(children) {
         // 事件
         if (item.events) {
             Object.entries(item.events).forEach((key) => {
-                //小程序没有input事件
-                if(key[0]==='input'){
+                //存在v-model时 input不处理,由directives处理
+                if(key[0]==='input' && item.attrsMap.hasOwnProperty('v-model')){
                     return ;
                 }
                 // 转换事件名 click -> tap 、touchmove-> touchmove、等
@@ -372,10 +372,10 @@ function t(children) {
     });
 }
 
-const template = '<div class="flex-1" :style="{ backgroundImage: \`url(${userInfo.avatar})\` }" class="avatar-img"></div>'
+const template = `<input @input="handle"/>`
 // const template = '<div class="aaa" class="bbb"></div>'
 
-// const r = template2WxTemplate(template);
+const r = template2WxTemplate(template);
 
 
 

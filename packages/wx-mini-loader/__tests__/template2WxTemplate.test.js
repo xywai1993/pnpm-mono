@@ -48,7 +48,13 @@ test("模板字符串 is OK", () => {
     expect(data2).toMatch(`background-image:url({{userInfo.avatar}})`);
 });
 
-test("v-mdoel is ok ", () => {
+test("input is ok", () => {
+    const template = '<input @input="handle(1)"/>';
+    const data = t2w(template);
+    expect(data).toMatch(`bind:input="handle"`);
+});
+
+test("v-model is ok ", () => {
     const template = '<input v-model="demo"/>';
     const data = t2w(template);
     expect(data).toMatch(`bindinput="__vModelEventResponses"`);
